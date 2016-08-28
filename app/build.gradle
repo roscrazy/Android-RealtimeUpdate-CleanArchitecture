@@ -10,7 +10,7 @@ android {
     buildToolsVersion rootProject.ext.androidBuildToolsVersion
 
     defaultConfig {
-        applicationId "com.mysquar.fetch"
+        applicationId "com.mike.feed"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
