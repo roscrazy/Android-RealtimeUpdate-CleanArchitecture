@@ -22,6 +22,6 @@ I just want to demostrate the real time update from a background thread thought.
 
 Compile 
 -----------------
-Follow this tutorial : https://firebase.google.com/docs/android/setup  
-and create your own google-services.json file.
+Follow this tutorial "https://firebase.google.com/docs/android/setup" to create your own google-services.json file.
+And just import this project by Android Studio.
 
