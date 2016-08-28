@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1011028137810",
+    "firebase_url": "https://mysquar-dc8fb.firebaseio.com",
+    "project_id": "mysquar-dc8fb",
+    "storage_bucket": "mysquar-dc8fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1011028137810:android:08f8da8a722a56f3",
+        "android_client_info": {
+          "package_name": "com.mysquar.fetch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1011028137810-fkr5s20gbfu0k351imav7944bu6ku1gn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mysquar.fetch",
+            "certificate_hash": "F77FF021B7CE3AB7C5376E7BBEDAFF3B9DCF6F04"
+          }
+        },
+        {
+          "client_id": "1011028137810-rmm3a3mkdn06afhb8eurovsm4hr948t7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHMZCjyeDLHnbxS3utTV_tPND96XYOpp8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1011028137810-rmm3a3mkdn06afhb8eurovsm4hr948t7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

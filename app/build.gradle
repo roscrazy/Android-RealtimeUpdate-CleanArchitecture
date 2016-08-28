@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+// for dagger
+apply plugin: 'com.neenbedankt.android-apt'
+
+// log for rxjava
+apply plugin: 'com.fernandocejas.frodo'
+
+android {
+    compileSdkVersion rootProject.ext.androidCompileSdkVersion
+    buildToolsVersion rootProject.ext.androidBuildToolsVersion
+
+    defaultConfig {
+        applicationId "com.mysquar.fetch"
+        minSdkVersion 15
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(':data')
+    compile project(':utility')
+
+    def dependencies = rootProject.ext.appDependencies
+//    def androidTestDependencies = rootProject.ext.appAndroidTestDependencies
+    def testDependencies = rootProject.ext.appTestDependencies
+
+    apt dependencies.daggerCompiler
+    apt dependencies.butterknifeCompiler
+    compile dependencies.butterKnife
+    compile dependencies.dagger
+    compile dependencies.rxJava
+    compile dependencies.rxbinding
+    compile dependencies.rxAndroid
+    compile dependencies.timber
+    compile dependencies.recyclerview
+    compile dependencies.cardview
+    compile dependencies.designSupport
+    compile dependencies.appCompat
+
+
+    provided dependencies.javaxAnnotation
+
+    testCompile testDependencies.junit
+    testCompile testDependencies.mockito
+    testCompile testDependencies.robolectricSupport
+    testCompile testDependencies.robolectric
+
+
+}
+
+
+apply plugin: 'com.google.gms.google-services'

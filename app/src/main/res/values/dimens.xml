@@ -1,0 +1,8 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!--For earch kind of screen, we can have a default image size with value-sw320dip and so on-->
+    <dimen name="default_image_size">250dip</dimen>
+</resources>
