@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Hello Firebase</string>
+    <string name="app_name">Feeds</string>
 
-    <string name="scr_new_feed_default_image_path">http://topanhdep.net/wp-content/uploads/2015/12/anh-girl-xinh-gai-dep-98-6.jpg</string>
+    <string name="scr_new_feed_title">New Feed</string>
     <string name="scr_new_feed_lbl_submit">Submit</string>
     <string name="scr_feed_list_lbl_delete">Delete</string>
     <string name="error_msg">Oop! There is an error occur! Please check your internet connection</string>
