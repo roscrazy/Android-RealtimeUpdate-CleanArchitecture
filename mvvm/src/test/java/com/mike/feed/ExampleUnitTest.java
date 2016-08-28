@@ -1,4 +1,4 @@
-package com.mysquar.mvvm;
+package com.mike.feed;
 
 import org.junit.Test;
 

@@ -1,16 +1,26 @@
 apply plugin: 'com.android.application'
+// for dagger
+apply plugin: 'com.neenbedankt.android-apt'
+
+// log for rxjava
+apply plugin: 'com.fernandocejas.frodo'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    compileSdkVersion rootProject.ext.androidCompileSdkVersion
+    buildToolsVersion rootProject.ext.androidBuildToolsVersion
 
     defaultConfig {
-        applicationId "com.mysquar.mvvm"
+        applicationId "com.mike.feed"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
     }
+
+    dataBinding {
+        enabled = true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -20,7 +30,36 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.1.1'
+    dependencies {
+
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+        compile project(':data')
+        compile project(':utility')
+
+        def dependencies = rootProject.ext.appDependencies
+        def testDependencies = rootProject.ext.appTestDependencies
+
+        apt dependencies.daggerCompiler
+        apt dependencies.butterknifeCompiler
+        compile dependencies.butterKnife
+        compile dependencies.dagger
+        compile dependencies.rxJava
+        compile dependencies.rxbinding
+        compile dependencies.rxAndroid
+        compile dependencies.timber
+        compile dependencies.recyclerview
+        compile dependencies.cardview
+        compile dependencies.designSupport
+        compile dependencies.appCompat
+
+
+        provided dependencies.javaxAnnotation
+
+        testCompile testDependencies.junit
+        testCompile testDependencies.mockito
+        testCompile testDependencies.robolectricSupport
+        testCompile testDependencies.robolectric
+    }
 }
+
+apply plugin: 'com.google.gms.google-services'

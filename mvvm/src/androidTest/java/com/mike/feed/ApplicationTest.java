@@ -1,4 +1,4 @@
-package com.mysquar.mvvm;
+package com.mike.feed;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
