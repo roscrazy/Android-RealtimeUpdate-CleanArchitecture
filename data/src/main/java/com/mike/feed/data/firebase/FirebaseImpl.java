@@ -47,7 +47,7 @@ public class FirebaseImpl implements Firebase {
                 registerFeedChangedEvent(subscriber);
 
             }
-        });
+        }).onBackpressureBuffer();
 
 
     }
@@ -130,9 +130,11 @@ public class FirebaseImpl implements Firebase {
                             WrittenEntity writtenEntity = new WrittenEntity();
                             writtenEntity.setKey(key);
                             subscriber.onNext(writtenEntity);
+                            subscriber.onCompleted();
                         }else{
                             subscriber.onError(databaseError.toException());
                         }
+
                     }
                 });
 
