@@ -15,7 +15,7 @@
  */
 package com.mike.feed;
 
-import com.mike.domain.executor.PostExecutionThread;
+import com.mike.feed.domain.executor.PostExecutionThread;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;

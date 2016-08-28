@@ -1,6 +1,6 @@
 package com.mike.feed.ui;
 
-import com.mike.domain.interactor.FeedChangedUseCase;
+import com.mike.feed.domain.interactor.FeedChangedUseCase;
 import com.mike.feed.mapper.FeedModelMapper;
 import com.mike.feed.model.FeedChangedInfoModel;
 import com.mike.feed.model.FeedModel;

@@ -1,6 +1,6 @@
 package com.mike.feed.mapper;
 
-import com.mike.domain.BitmapItem;
+import com.mike.feed.domain.BitmapItem;
 import com.mike.feed.model.BitmapModel;
 
 import javax.inject.Inject;

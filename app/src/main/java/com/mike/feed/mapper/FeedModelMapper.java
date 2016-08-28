@@ -1,9 +1,9 @@
 package com.mike.feed.mapper;
 
-import com.mike.domain.Deleted;
-import com.mike.domain.Feed;
-import com.mike.domain.FeedChangedInfo;
-import com.mike.domain.Written;
+import com.mike.feed.domain.Deleted;
+import com.mike.feed.domain.Feed;
+import com.mike.feed.domain.FeedChangedInfo;
+import com.mike.feed.domain.Written;
 import com.mike.feed.model.DeletedModel;
 import com.mike.feed.model.FeedChangedInfoModel;
 import com.mike.feed.model.FeedModel;

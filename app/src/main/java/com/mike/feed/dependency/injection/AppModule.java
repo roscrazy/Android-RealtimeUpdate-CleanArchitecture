@@ -2,15 +2,15 @@ package com.mike.feed.dependency.injection;
 
 import android.content.Context;
 
-import com.mike.data.cache.FeedCache;
-import com.mike.data.cache.FeedCacheImpl;
-import com.mike.data.executor.JobExecutor;
-import com.mike.data.repository.BitmapDataRepository;
-import com.mike.data.repository.FeedDataRepository;
-import com.mike.domain.executor.PostExecutionThread;
-import com.mike.domain.executor.ThreadExecutor;
-import com.mike.domain.repository.BitmapRepository;
-import com.mike.domain.repository.FeedRepository;
+import com.mike.feed.data.cache.FeedCache;
+import com.mike.feed.data.cache.FeedCacheImpl;
+import com.mike.feed.data.executor.JobExecutor;
+import com.mike.feed.data.repository.BitmapDataRepository;
+import com.mike.feed.data.repository.FeedDataRepository;
+import com.mike.feed.domain.executor.PostExecutionThread;
+import com.mike.feed.domain.executor.ThreadExecutor;
+import com.mike.feed.domain.repository.BitmapRepository;
+import com.mike.feed.domain.repository.FeedRepository;
 import com.mike.feed.SquarApp;
 import com.mike.feed.UIThread;
 

@@ -3,7 +3,7 @@ package com.mike.feed.ui.base;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.mike.domain.interactor.UseCase;
+import com.mike.feed.domain.interactor.UseCase;
 
 /**
  * Base presenter implementation.

@@ -1,10 +1,10 @@
 package com.mike.feed.ui;
 
-import com.mike.domain.Written;
-import com.mike.domain.executor.PostExecutionThread;
-import com.mike.domain.executor.ThreadExecutor;
-import com.mike.domain.interactor.NewFeedUseCase;
-import com.mike.domain.repository.FeedRepository;
+import com.mike.feed.domain.Written;
+import com.mike.feed.domain.executor.PostExecutionThread;
+import com.mike.feed.domain.executor.ThreadExecutor;
+import com.mike.feed.domain.interactor.NewFeedUseCase;
+import com.mike.feed.domain.repository.FeedRepository;
 import com.mike.feed.mapper.FeedModelMapper;
 
 import org.junit.Before;

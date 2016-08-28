@@ -4,7 +4,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.mike.domain.interactor.UseCase;
+import com.mike.feed.domain.interactor.UseCase;
 import com.mike.feed.util.CompositeUseCases;
 
 /**

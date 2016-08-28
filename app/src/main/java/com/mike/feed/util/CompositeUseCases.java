@@ -1,6 +1,6 @@
 package com.mike.feed.util;
 
-import com.mike.domain.interactor.UseCase;
+import com.mike.feed.domain.interactor.UseCase;
 
 import java.util.ArrayList;
 import java.util.Collection;
