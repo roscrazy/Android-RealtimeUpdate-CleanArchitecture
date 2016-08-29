@@ -1,4 +1,4 @@
-package com.mike.feed.ui;
+package com.mike.feed.view.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +12,8 @@ import com.mike.feed.R;
 import com.mike.feed.SquarApp;
 import com.mike.feed.dependency.injection.AppComponent;
 import com.mike.feed.dependency.injection.scope.FragmentScope;
-import com.mike.feed.ui.base.BaseFragment;
+import com.mike.feed.presenter.NewFeedPresenter;
+import com.mike.feed.view.base.BaseFragment;
 
 import javax.inject.Inject;
 

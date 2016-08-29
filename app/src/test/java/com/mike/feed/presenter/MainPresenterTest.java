@@ -1,9 +1,13 @@
-package com.mike.feed.ui;
+package com.mike.feed.presenter;
 
+import com.mike.feed.domain.executor.PostExecutionThread;
+import com.mike.feed.domain.executor.ThreadExecutor;
 import com.mike.feed.domain.interactor.FeedChangedUseCase;
+import com.mike.feed.domain.repository.FeedRepository;
 import com.mike.feed.mapper.FeedModelMapper;
 import com.mike.feed.model.FeedChangedInfoModel;
 import com.mike.feed.model.FeedModel;
+import com.mike.feed.view.MainView;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,12 +40,23 @@ public class MainPresenterTest {
     @Mock
     List<String> keyStore;
 
+
+
+    @Mock
+    FeedRepository repository;
+
+    @Mock
+    ThreadExecutor threadExecutor;
+
+    @Mock
+    PostExecutionThread postExecutionThread;
+
     MainPresenter mainPresenter;
 
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
-        mainPresenter = new MainPresenter(feedChangedUseCase, mapper);
+        mainPresenter = new MainPresenter(feedChangedUseCase, mapper, repository, threadExecutor, postExecutionThread);
         mainPresenter.bindView(view);
         mainPresenter.mKeyStore = keyStore;
     }

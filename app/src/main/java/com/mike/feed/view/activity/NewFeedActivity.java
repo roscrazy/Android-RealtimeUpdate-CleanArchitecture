@@ -1,9 +1,9 @@
-package com.mike.feed.ui;
+package com.mike.feed.view.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.mike.feed.ui.base.BaseHostActivity;
+import com.mike.feed.view.base.BaseHostActivity;
 
 /**
  * Created by MinhNguyen on 8/26/16.

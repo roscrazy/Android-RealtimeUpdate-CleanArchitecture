@@ -1,4 +1,4 @@
-package com.mike.feed.ui;
+package com.mike.feed.view;
 
 import com.mike.feed.model.FeedModel;
 

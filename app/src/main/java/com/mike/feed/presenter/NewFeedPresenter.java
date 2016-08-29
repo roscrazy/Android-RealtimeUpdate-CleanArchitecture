@@ -1,4 +1,4 @@
-package com.mike.feed.ui;
+package com.mike.feed.presenter;
 
 import android.support.annotation.NonNull;
 
@@ -13,7 +13,7 @@ import com.mike.feed.domain.repository.FeedRepository;
 import com.mike.feed.dependency.injection.scope.FragmentScope;
 import com.mike.feed.mapper.FeedModelMapper;
 import com.mike.feed.model.WrittenModel;
-import com.mike.feed.ui.base.BasePresenter;
+import com.mike.feed.view.NewFeedView;
 
 import javax.inject.Inject;
 

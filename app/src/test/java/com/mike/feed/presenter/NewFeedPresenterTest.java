@@ -1,4 +1,4 @@
-package com.mike.feed.ui;
+package com.mike.feed.presenter;
 
 import com.mike.feed.domain.Written;
 import com.mike.feed.domain.executor.PostExecutionThread;
@@ -6,6 +6,8 @@ import com.mike.feed.domain.executor.ThreadExecutor;
 import com.mike.feed.domain.interactor.NewFeedUseCase;
 import com.mike.feed.domain.repository.FeedRepository;
 import com.mike.feed.mapper.FeedModelMapper;
+import com.mike.feed.view.NewFeedView;
+
 
 import org.junit.Before;
 import org.junit.Test;

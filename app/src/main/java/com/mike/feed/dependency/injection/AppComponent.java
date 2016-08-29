@@ -2,8 +2,8 @@ package com.mike.feed.dependency.injection;
 
 import android.content.Context;
 
-import com.mike.feed.ui.MainFragment;
-import com.mike.feed.ui.NewFeedFragment;
+import com.mike.feed.view.fragment.MainFragment;
+import com.mike.feed.view.fragment.NewFeedFragment;
 
 import javax.inject.Singleton;
 

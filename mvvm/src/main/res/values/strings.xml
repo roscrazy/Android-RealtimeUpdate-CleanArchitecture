@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">mvvm</string>
+    <string name="app_name">Feeds mvvm</string>
+
+    <string name="scr_new_feed_title">New Feed</string>
+    <string name="scr_new_feed_lbl_submit">Submit</string>
+    <string name="scr_feed_list_lbl_delete">Delete</string>
+    <string name="error_msg">Oop! There is an error occur! Please check your internet connection</string>
 </resources>

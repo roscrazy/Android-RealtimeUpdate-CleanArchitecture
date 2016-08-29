@@ -1,4 +1,4 @@
-package com.mike.feed.ui.base;
+package com.mike.feed.view.base;
 
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;

@@ -1,4 +1,4 @@
-package com.mike.feed.ui;
+package com.mike.feed.view;
 
 /**
  * Created by MinhNguyen on 8/26/16.

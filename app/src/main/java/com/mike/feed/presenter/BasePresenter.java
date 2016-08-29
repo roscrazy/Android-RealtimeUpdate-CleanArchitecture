@@ -1,4 +1,4 @@
-package com.mike.feed.ui.base;
+package com.mike.feed.presenter;
 
 import android.support.annotation.CallSuper;
 import android.support.annotation.NonNull;

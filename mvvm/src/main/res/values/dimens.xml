@@ -1,0 +1,4 @@
+<resources>
+    <!--For earch kind of screen, we can have a default image size with value-sw320dip and so on-->
+    <dimen name="default_image_size">250dip</dimen>
+</resources>

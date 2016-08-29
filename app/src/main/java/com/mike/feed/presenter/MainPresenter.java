@@ -1,4 +1,4 @@
-package com.mike.feed.ui;
+package com.mike.feed.presenter;
 
 import android.support.annotation.NonNull;
 
@@ -15,7 +15,7 @@ import com.mike.feed.dependency.injection.scope.FragmentScope;
 import com.mike.feed.mapper.FeedModelMapper;
 import com.mike.feed.model.FeedChangedInfoModel;
 import com.mike.feed.model.FeedModel;
-import com.mike.feed.ui.base.BasePresenter;
+import com.mike.feed.view.MainView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,14 +115,14 @@ public class MainPresenter extends BasePresenter<MainView> {
 
     }
 
-    int getIndexForKey(String key) {
+    public int getIndexForKey(String key) {
         int index = mKeyStore.indexOf(key);
         if(index == -1)
             throw new IllegalArgumentException("Key not found");
         return index;
     }
 
-    void deleteFeed(FeedModel feedModel, int index){
+    public void deleteFeed(FeedModel feedModel, int index){
         String key = mKeyStore.get(index);
 
         /**
