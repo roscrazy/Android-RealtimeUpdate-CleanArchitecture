@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/default_margin_medium"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    tools:context=".view.MainActivity">
+    tools:context=".view.activity.MainActivity">
 
     <EditText
         android:layout_width="match_parent"

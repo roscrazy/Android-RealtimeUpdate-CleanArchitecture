@@ -1,9 +1,10 @@
-package com.mike.feed.view;
+package com.mike.feed.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.mike.feed.R;
+import com.mike.feed.view.fragment.MainFragment;
 import com.mike.feed.view.base.BaseHostActivity;
 
 import butterknife.OnClick;

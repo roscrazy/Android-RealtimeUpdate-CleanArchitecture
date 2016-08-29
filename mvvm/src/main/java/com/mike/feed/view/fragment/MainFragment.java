@@ -1,4 +1,4 @@
-package com.mike.feed.view;
+package com.mike.feed.view.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +14,8 @@ import com.mike.feed.SquarApp;
 import com.mike.feed.dependency.injection.AppComponent;
 import com.mike.feed.dependency.injection.scope.FragmentScope;
 import com.mike.feed.model.FeedModel;
+import com.mike.feed.view.adapter.FeedAdapter;
+import com.mike.feed.view.MainView;
 import com.mike.feed.view.base.BaseFragment;
 import com.mike.feed.util.ImageLoader;
 
