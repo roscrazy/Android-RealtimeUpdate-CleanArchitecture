@@ -2,6 +2,7 @@ package com.mike.feed.ui;
 
 import com.mike.feed.domain.executor.PostExecutionThread;
 import com.mike.feed.domain.executor.ThreadExecutor;
+import com.mike.feed.domain.interactor.DeleteFeedUseCaseFactory;
 import com.mike.feed.domain.interactor.FeedChangedUseCase;
 import com.mike.feed.domain.repository.FeedRepository;
 import com.mike.feed.mapper.FeedModelMapper;
@@ -41,22 +42,15 @@ public class MainPresenterTest {
 
 
     @Mock
-    FeedRepository repository;
-
-    @Mock
-    ThreadExecutor threadExecutor;
-
-    @Mock
-    PostExecutionThread postExecutionThread;
+    DeleteFeedUseCaseFactory mDeleteFeedUseCaseFactory;
 
     MainPresenter mainPresenter;
 
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
-        mainPresenter = new MainPresenter(feedChangedUseCase, mapper, repository, threadExecutor, postExecutionThread);
+        mainPresenter = new MainPresenter(feedChangedUseCase, mapper, mDeleteFeedUseCaseFactory, keyStore);
         mainPresenter.bindView(view);
-        mainPresenter.mKeyStore = keyStore;
     }
 
     @Test

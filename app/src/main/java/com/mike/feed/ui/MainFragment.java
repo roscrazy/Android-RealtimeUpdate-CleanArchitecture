@@ -13,6 +13,9 @@ import com.mike.feed.R;
 import com.mike.feed.SquarApp;
 import com.mike.feed.dependency.injection.AppComponent;
 import com.mike.feed.dependency.injection.scope.FragmentScope;
+import com.mike.feed.domain.interactor.DeleteFeedUseCaseFactory;
+import com.mike.feed.domain.interactor.FeedChangedUseCase;
+import com.mike.feed.mapper.FeedModelMapper;
 import com.mike.feed.model.FeedModel;
 import com.mike.feed.ui.base.BaseFragment;
 import com.mike.feed.util.ImageLoader;
@@ -24,6 +27,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import dagger.Module;
+import dagger.Provides;
 import dagger.Subcomponent;
 
 /**
@@ -144,5 +148,10 @@ public class MainFragment extends BaseFragment implements MainView, FeedAdapter.
     @Module
     public static class MainScreenModule {
         // provide fragment needed object here
+
+        @Provides
+        public MainPresenter provideMainPresenter(FeedChangedUseCase feedChangedUseCase, FeedModelMapper mapper, DeleteFeedUseCaseFactory deleteFeedUseCaseFactory){
+            return new MainPresenter(feedChangedUseCase, mapper, deleteFeedUseCaseFactory, new ArrayList<String>());
+        }
     }
 }

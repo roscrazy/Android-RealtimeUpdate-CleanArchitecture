@@ -1,14 +1,17 @@
 package com.mike.feed.ui;
 
+import com.mike.feed.domain.Feed;
 import com.mike.feed.domain.Written;
 import com.mike.feed.domain.executor.PostExecutionThread;
 import com.mike.feed.domain.executor.ThreadExecutor;
 import com.mike.feed.domain.interactor.NewFeedUseCase;
+import com.mike.feed.domain.interactor.NewFeedUseCaseFactory;
 import com.mike.feed.domain.repository.FeedRepository;
 import com.mike.feed.mapper.FeedModelMapper;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -22,30 +25,25 @@ import rx.Subscriber;
 public class NewFeedPresenterTest {
 
     @Mock
-    FeedRepository repository;
+    private NewFeedUseCaseFactory mNewFeedUseCaseFactory;
 
     @Mock
-    ThreadExecutor threadExecutor;
+    private NewFeedUseCase mUseCase;
 
     @Mock
-    PostExecutionThread postExecutionThread;
+    private FeedModelMapper mMapper;
 
     @Mock
-    NewFeedUseCase useCase;
+    private NewFeedView mView;
 
-    @Mock
-    FeedModelMapper mapper;
 
-    @Mock
-    NewFeedView view;
-
-    NewFeedPresenter presenter;
+    private NewFeedPresenter mPresenter;
 
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
-        presenter = new NewFeedPresenter(repository, threadExecutor, postExecutionThread, mapper);
-        presenter.bindView(view);
+        mPresenter = new NewFeedPresenter(mNewFeedUseCaseFactory, mMapper);
+        mPresenter.bindView(mView);
     }
 
     @Test
@@ -59,9 +57,9 @@ public class NewFeedPresenterTest {
             }
         });
 
-        observable.subscribe(presenter.new NewFeedSubscriber());
-        Mockito.verify(view).close();
-        Mockito.verifyNoMoreInteractions(view);
+        observable.subscribe(mPresenter.new NewFeedSubscriber());
+        Mockito.verify(mView).close();
+        Mockito.verifyNoMoreInteractions(mView);
 
     }
 
@@ -74,9 +72,17 @@ public class NewFeedPresenterTest {
             }
         });
 
-        observable.subscribe(presenter.new NewFeedSubscriber());
-        Mockito.verify(view).showErrorMsg();
-        Mockito.verifyNoMoreInteractions(view);
+        observable.subscribe(mPresenter.new NewFeedSubscriber());
+        Mockito.verify(mView).showErrorMsg();
+        Mockito.verifyNoMoreInteractions(mView);
+    }
 
+    @Test
+    public void submitShouldExecuteUseCase(){
+        Mockito.when(mNewFeedUseCaseFactory.create(Matchers.any(Feed.class))).thenReturn(mUseCase);
+        mPresenter.submit("title", "body", "image");
+
+        Mockito.verify(mUseCase).execute(Matchers.any(Subscriber.class));
+        Mockito.verifyNoMoreInteractions(mView);
     }
 }
