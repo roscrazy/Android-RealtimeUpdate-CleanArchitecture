@@ -9,6 +9,7 @@ import com.mike.feed.domain.executor.PostExecutionThread;
 import com.mike.feed.domain.executor.ThreadExecutor;
 import com.mike.feed.domain.interactor.DefaultSubscriber;
 import com.mike.feed.domain.interactor.NewFeedUseCase;
+import com.mike.feed.domain.interactor.NewFeedUseCaseFactory;
 import com.mike.feed.domain.repository.FeedRepository;
 import com.mike.feed.dependency.injection.scope.FragmentScope;
 import com.mike.feed.mapper.FeedModelMapper;
@@ -23,46 +24,32 @@ import javax.inject.Inject;
 @FragmentScope
 public class NewFeedPresenter extends BasePresenter<NewFeedView> {
 
+    @NonNull
+    NewFeedUseCaseFactory mNewFeedUseCaseFactory;
 
-    @NonNull
-    private FeedRepository mRepository;
-    @NonNull
-    private ThreadExecutor mThreadExecutor;
-    @NonNull
-    private PostExecutionThread mPostExecutionThread;
     @NonNull
     private FeedModelMapper mMapper;
 
-    NewFeedUseCase newFeedUseCase;
 
     @Inject
-    public NewFeedPresenter(FeedRepository mRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread, FeedModelMapper mapper) {
-        this.mRepository = mRepository;
-        this.mThreadExecutor = threadExecutor;
-        this.mPostExecutionThread = postExecutionThread;
+    public NewFeedPresenter(NewFeedUseCaseFactory newFeedUseCaseFactory, FeedModelMapper mapper) {
+        this.mNewFeedUseCaseFactory = newFeedUseCaseFactory;
         this.mMapper = mapper;
     }
 
-    public void submit(String title, String body, String img){
+    public void submit(String title, String body, String img) {
         Feed feed = new Feed();
         feed.setBody(body);
         feed.setTitle(title);
         feed.setImage(img);
 
-        /**
-         * I am not sure whether it could be a good approach when I init a UseCase in a presenter
-         * Presenter should not know anything about FeedRepository, ThreadExecutor, PostExecutionThread, and it's difficult to test whether the UseCase have executed.
-         * But for dynamic param to a UseCase, I think it can be an acceptable option.
-         * Some people do something like "newFeedUseCase.setFeed(feed)" before executing, but I don't think it's better than this approach.
-         * I am more than happy if you could provide me some better approach or your opinion.
-         */
-        newFeedUseCase = new NewFeedUseCase(feed, mRepository, mThreadExecutor, mPostExecutionThread);
+        NewFeedUseCase newFeedUseCase = mNewFeedUseCaseFactory.create(feed);
         newFeedUseCase.execute(new NewFeedSubscriber());
         unsubscribeOnUnbindView(newFeedUseCase);
     }
 
 
-    @RxLogSubscriber
+    
     protected final class NewFeedSubscriber extends DefaultSubscriber<Written> {
 
         @Override

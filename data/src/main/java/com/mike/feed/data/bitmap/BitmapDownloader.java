@@ -44,10 +44,9 @@ public class BitmapDownloader {
 
 
     public Observable<Bitmap> downloadBitmap(String url, final int reqWidth, final int reqHeight) {
-        return this.downloadBitmap(url).map(new Func1<String, Bitmap>() {
+        return this.downloadBitmap(url).map(new Func1<File, Bitmap>() {
             @Override
-            public Bitmap call(String s) {
-                File file = new File(s);
+            public Bitmap call(File file) {
                 return BitmapUtil.loadBitMapFromFile(file, reqWidth, reqHeight);
             }
         });
@@ -59,10 +58,10 @@ public class BitmapDownloader {
      * @param strUrl
      * @return
      */
-    private Observable<String> downloadBitmap(final String strUrl) {
-        return Observable.create(new Observable.OnSubscribe<String>() {
+    private Observable<File> downloadBitmap(final String strUrl) {
+        return Observable.create(new Observable.OnSubscribe<File>() {
             @Override
-            public void call(Subscriber<? super String> subscriber) {
+            public void call(Subscriber<? super File> subscriber) {
                 BufferedOutputStream bufferedOutputStream = null;
                 DataInputStream inputStream = null;
                 OutputStream connectOutputStream = null;
@@ -92,6 +91,10 @@ public class BitmapDownloader {
                         bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(cacheFile));
 
                         Util.copyStream(inputStream, bufferedOutputStream);
+
+                        
+                        subscriber.onNext(cacheFile);
+                        subscriber.onCompleted();
                     } finally {
                         if (connectOutputStream != null) {
                             connectOutputStream.close();

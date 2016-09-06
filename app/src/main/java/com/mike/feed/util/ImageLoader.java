@@ -8,6 +8,7 @@ import com.mike.feed.domain.BitmapItem;
 import com.mike.feed.domain.executor.PostExecutionThread;
 import com.mike.feed.domain.executor.ThreadExecutor;
 import com.mike.feed.domain.interactor.BitmapUseCase;
+import com.mike.feed.domain.interactor.BitmapUseCaseFactory;
 import com.mike.feed.domain.interactor.DefaultSubscriber;
 import com.mike.feed.domain.interactor.UseCase;
 import com.mike.feed.domain.repository.BitmapRepository;
@@ -32,25 +33,18 @@ public class ImageLoader {
     private static final int DEFAULT_IMAGE_ERROR = R.drawable.ic_error;
 
     private MemoryCache mMemoryCache;
-    private BitmapUseCase mBitmapUseCase;
-
     private Map<ImageView, String> mImageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
 
-    BitmapModelMapper mMapper;
-    ThreadExecutor mThreadExecutor;
-    PostExecutionThread mPostExecutionThread;
-    BitmapRepository mRepository;
-    List<UseCase> mUseCases;
+    private BitmapModelMapper mMapper;
+    private List<UseCase> mUseCases;
+    private BitmapUseCaseFactory mBitmapUseCaseFactory;
 
     @Inject
-    public ImageLoader(MemoryCache mMemoryCache, ThreadExecutor mThreadExecutor
-            , PostExecutionThread mPostExecutionThread, BitmapRepository mRepository, BitmapModelMapper mapper) {
+    public ImageLoader(MemoryCache mMemoryCache, BitmapUseCaseFactory bitmapUseCaseFactory, BitmapModelMapper mapper) {
         this.mMemoryCache = mMemoryCache;
-        this.mThreadExecutor = mThreadExecutor;
-        this.mPostExecutionThread = mPostExecutionThread;
-        this.mRepository = mRepository;
         this.mUseCases = new ArrayList<>();
         this.mMapper = mapper;
+        this.mBitmapUseCaseFactory = bitmapUseCaseFactory;
     }
 
     public void displayImage(final ImageView imageView, final String url, int reqWidth, int reqHeight){
@@ -67,18 +61,9 @@ public class ImageLoader {
             imageView.setImageBitmap(bitmap);
         }else{
             imageView.setImageResource(DEFAULT_IMAGE_ID);
-            /**
-             * I am not sure whether it could be a good approach when I init a UseCase in a presenter
-             * Presenter should not know anything about Repository, ThreadExecutor, PostExecutionThread, and it's difficult to test whether the UseCase have executed.
-             * But for dynamic param to a UseCase, I think it can be an acceptable option.
-             * Some people do something like "newFeedUseCase.init(url, width, height)" before execute, but I don't think it's better than this approach.
-             * I am more than happy if you could provide me some better option or your opinion.
-             */
-
-            mBitmapUseCase = new BitmapUseCase(mThreadExecutor, mPostExecutionThread, mRepository, url, reqWidth, reqHeight);
-
-            mBitmapUseCase.execute(new BitmapSubscriber(imageView, url));
-            mUseCases.add(mBitmapUseCase);
+            BitmapUseCase bitmapUseCase = mBitmapUseCaseFactory.create(url, reqWidth, reqHeight);
+            bitmapUseCase.execute(new BitmapSubscriber(imageView, url));
+            mUseCases.add(bitmapUseCase);
 
         }
 
