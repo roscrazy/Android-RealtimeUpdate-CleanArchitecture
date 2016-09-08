@@ -10,6 +10,4 @@ import com.mike.feed.domain.interactor.UseCase;
 public interface ViewModel {
 
     void destroy();
-
-    void unsubscribeOnUnbindView(@NonNull UseCase subscription, @NonNull UseCase... subscriptions);
 }

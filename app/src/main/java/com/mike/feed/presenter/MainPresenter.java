@@ -37,7 +37,6 @@ public class MainPresenter extends BasePresenter<MainView> {
 
     /**
      * Should use another collection which support searching.
-     * Maybe a {@link java.util.HashMap} could be considered. But it will take more memory.
      */
     @NonNull
     private List<String> mKeyStore;

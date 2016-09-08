@@ -2,6 +2,7 @@ package com.mike.feed.view.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.mike.feed.R;
 import com.mike.feed.view.fragment.MainFragment;
@@ -25,12 +26,15 @@ public class MainActivity extends BaseHostActivity {
             MainFragment mainFragment = MainFragment.createInstance();
             replace(mainFragment, MainFragment.class.getSimpleName());
         }
-    }
 
 
-    @OnClick(R.id.fabAddNew)
-    public void onAddNewClicked(){
-        Intent intent = new Intent(this, NewFeedActivity.class);
-        startActivity(intent);
+        findViewById(R.id.fabAddNew).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, NewFeedActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
 }

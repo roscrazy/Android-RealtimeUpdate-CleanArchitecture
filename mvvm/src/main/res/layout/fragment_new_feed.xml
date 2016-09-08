@@ -1,37 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/default_margin_medium"
-    android:paddingLeft="@dimen/default_margin_medium"
-    android:paddingRight="@dimen/default_margin_medium"
-    android:paddingTop="@dimen/default_margin_medium"
-    android:gravity="center_vertical"
-    android:orientation="vertical"
-    tools:context=".view.activity.MainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <EditText
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.mike.feed.viewmodel.NewFeedViewModel" />
+    </data>
+
+
+    <LinearLayout
+        android:id="@+id/lnContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/etTitle"/>
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/default_margin_medium"
+        android:paddingLeft="@dimen/default_margin_medium"
+        android:paddingRight="@dimen/default_margin_medium"
+        android:paddingTop="@dimen/default_margin_medium"
+        tools:context=".view.activity.MainActivity">
+
+        <EditText
+            android:id="@+id/etTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={viewModel.title}" />
 
 
-    <EditText
-        android:id="@+id/etBody"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/etBody"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={viewModel.body}" />
 
-    <EditText
-        android:id="@+id/etImage"
-        android:text="http://topanhdep.net/wp-content/uploads/2015/12/anh-girl-xinh-gai-dep-98-6.jpg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/etImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={viewModel.image}" />
 
-    <Button
-        android:text="@string/scr_new_feed_lbl_submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btSubmit"/>
+        <Button
+            android:id="@+id/btSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="@{viewModel.onSubmitClicked}"
+            android:text="@string/scr_new_feed_lbl_submit" />
 
-</LinearLayout>
+    </LinearLayout>
+</layout>

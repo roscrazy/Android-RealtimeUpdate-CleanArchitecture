@@ -24,6 +24,19 @@ public class FeedModelMapper {
 
     }
 
+
+    public Feed transform(FeedModel entity){
+        Feed feed = new Feed();
+
+        feed.setImage(entity.getImage());
+        feed.setBody(entity.getBody());
+        feed.setTitle(entity.getTitle());
+        feed.setIndex(entity.getIndex());
+
+        return feed;
+    }
+
+
     public FeedModel transform(Feed entity){
         FeedModel feed = new FeedModel();
 

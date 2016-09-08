@@ -1,20 +1,17 @@
 package com.mike.feed.view.adapter;
 
+import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.mike.feed.R;
+import com.mike.feed.databinding.ViewItemFeedBinding;
 import com.mike.feed.model.FeedModel;
 import com.mike.feed.util.ImageLoader;
+import com.mike.feed.viewmodel.FeedItemViewModel;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by MinhNguyen on 8/27/16.
@@ -43,44 +40,23 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
 
     @Override
     public FeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_item_feed, parent, false);
-        return new FeedViewHolder(view);
+        ViewItemFeedBinding binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext())
+                , R.layout.view_item_feed
+                , parent
+                , false);
+
+        return new FeedViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(final FeedViewHolder holder, final int position) {
         final FeedModel model = mFeedModels.get(position);
+        holder.bindFeed(model, mOnDeleteClicked, position, mImageLoader);
+    }
 
-        holder.tvBody.setText(model.getBody());
-        holder.tvTitle.setText(model.getTitle());
 
-        if(model.getImage() != null && !model.getImage().isEmpty()){
-            holder.ivImage.setVisibility(View.VISIBLE);
-
-            /**
-             * We can set the default size depend on screen size over "value-swxxxdip" (I personal prefer this option).
-             * Or we can use this method to get the image view size
-             * holder.ivImage.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-             * @Override
-             * public void onGlobalLayout() {
-             *        mImageLoader.displayImage(holder.ivImage, model.getImage(), holder.ivImage.getMeasuredWidth(), 0);
-             * }
-             * });
-             */
-            int defaultSize = (int) holder.ivImage.getResources().getDimension(R.dimen.default_image_size);
-            mImageLoader.displayImage(holder.ivImage, model.getImage(), defaultSize, defaultSize);
-        }else{
-            holder.ivImage.setVisibility(View.GONE);
-        }
-
-        holder.btDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(mOnDeleteClicked != null)
-                    mOnDeleteClicked.onDeleteClicked(model, position);
-            }
-        });
-
+    public List<FeedModel> getFeedModels(){
+        return mFeedModels;
     }
 
     @Override
@@ -88,23 +64,34 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedViewHolder
         return mFeedModels != null ? mFeedModels.size() : 0;
     }
 
+
+
     public static class FeedViewHolder extends RecyclerView.ViewHolder{
 
-        @BindView(R.id.tvTitle)
-        TextView tvTitle;
+        ViewItemFeedBinding mBinding;
 
-        @BindView(R.id.tvBody)
-        TextView tvBody;
+        public FeedViewHolder(ViewItemFeedBinding binding) {
+            super(binding.cardView);
+            this.mBinding = binding;
+        }
 
-        @BindView(R.id.ivImage)
-        ImageView ivImage;
+        public void bindFeed(FeedModel feedModel,
+                             FeedAdapter.OnDeleteClicked onDeleteClicked, int position, ImageLoader imageLoader){
 
-        @BindView(R.id.btDelete)
-        View btDelete;
+            if(this.mBinding.getViewModel() == null){
+                this.mBinding.setViewModel(new FeedItemViewModel(feedModel, onDeleteClicked, position));
+            }else{
+                this.mBinding.getViewModel().setFeedModel(feedModel);
+            }
 
-        public FeedViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
+
+            int defaultSize = (int) this.mBinding.ivImage.getResources().getDimension(R.dimen.default_image_size);
+
+            /**
+             * Follow MVVM, We should download the image and put to the ViewModel -> notify the FeedViewHolder that image have changed -> imageview will be updated
+             * But in my point of view, we should use this imageloader as an exception for a better performance.
+             */
+            imageLoader.displayImage(mBinding.ivImage, feedModel.getImage(), defaultSize, defaultSize);
 
         }
 

@@ -1,47 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/default_margin_small">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.mike.feed.viewmodel.FeedItemViewModel" />
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/default_padding_normal">
+        android:layout_margin="@dimen/default_margin_small">
 
-        <ImageView
-            android:id="@+id/ivImage"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_loading" />
+            android:padding="@dimen/default_padding_normal">
 
-        <Button
-            android:id="@+id/btDelete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/ivImage"
-            android:text="@string/scr_feed_list_lbl_delete" />
+            <ImageView
+                android:id="@+id/ivImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_loading" />
 
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/ivImage"
-            android:layout_toLeftOf="@+id/btDelete"
-            android:textStyle="bold"
-            tools:text="this is title" />
+            <Button
+                android:id="@+id/btDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/ivImage"
+                android:onClick="@{viewModel.onDeleteClicked}"
+                android:text="@string/scr_feed_list_lbl_delete" />
 
-        <TextView
-            android:id="@+id/tvBody"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tvTitle"
-            android:layout_toLeftOf="@+id/btDelete"
-            tools:text="this is body" />
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ivImage"
+                android:layout_toLeftOf="@+id/btDelete"
+                android:text="@{viewModel.title}"
+                android:textStyle="bold"
+                tools:text="this is title" />
+
+            <TextView
+                android:id="@+id/tvBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTitle"
+                android:layout_toLeftOf="@+id/btDelete"
+                android:text="@{viewModel.body}"
+                tools:text="this is body" />
 
 
-    </RelativeLayout>
+        </RelativeLayout>
 
-</android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
+</layout>

@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".view.activity.MainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.mike.feed.viewmodel.MainViewModel" />
+    </data>
+
+
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:clipToPadding="false"
-        android:padding="5dp"
-        android:scrollbars="vertical"
-        tools:listitem="@layout/view_item_feed" />
+        tools:context=".view.activity.MainActivity">
 
-</FrameLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:clipToPadding="false"
+            android:padding="5dp"
+            android:scrollbars="vertical"
+            tools:listitem="@layout/view_item_feed" />
+
+    </FrameLayout>
+</layout>

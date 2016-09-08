@@ -1,5 +1,6 @@
 package com.mike.feed.view.fragment;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,23 +12,22 @@ import android.widget.Toast;
 
 import com.mike.feed.R;
 import com.mike.feed.SquarApp;
+import com.mike.feed.databinding.FragmentMainBinding;
 import com.mike.feed.dependency.injection.AppComponent;
 import com.mike.feed.dependency.injection.scope.FragmentScope;
 import com.mike.feed.domain.interactor.DeleteFeedUseCaseFactory;
 import com.mike.feed.domain.interactor.FeedChangedUseCase;
 import com.mike.feed.mapper.FeedModelMapper;
 import com.mike.feed.model.FeedModel;
-import com.mike.feed.view.adapter.FeedAdapter;
-import com.mike.feed.view.MainView;
-import com.mike.feed.view.base.BaseFragment;
 import com.mike.feed.util.ImageLoader;
+import com.mike.feed.view.adapter.FeedAdapter;
+import com.mike.feed.view.base.BaseFragment;
+import com.mike.feed.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Subcomponent;
@@ -35,94 +35,105 @@ import dagger.Subcomponent;
 /**
  * Created by MinhNguyen on 8/25/16.
  */
-public class MainFragment extends BaseFragment implements MainView, FeedAdapter.OnDeleteClicked {
+public class MainFragment extends BaseFragment implements MainViewModel.DataListener {
 
     public static MainFragment createInstance(){
         return new MainFragment();
     }
 
-    @Inject
-    MainPresenter mPresenter;
 
     @Inject
     ImageLoader mImageLoader;
 
-    @BindView(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    @Inject
+    MainViewModel mViewModel;
 
-    List<FeedModel> mFeedModels;
+    private FragmentMainBinding mBinding;
 
-    FeedAdapter mAdapter;
 
-    private LinearLayoutManager mLayoutManager;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        mBinding = DataBindingUtil.inflate(inflater
+                , R.layout.fragment_main
+                , container
+                , false);
+
+        return mBinding.frameLayout;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mPresenter.bindView(this);
-        mPresenter.init();
+        setUpRecyclerView(mBinding.recyclerView);
+        mBinding.setViewModel(mViewModel);
+        mViewModel.init();
+    }
 
+    private void setUpRecyclerView(RecyclerView recyclerView){
         // Set up Layout Manager, reverse layout
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mLayoutManager.setReverseLayout(true);
-        mLayoutManager.setStackFromEnd(true);
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setReverseLayout(true);
+        layoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(layoutManager);
 
-        mFeedModels = new ArrayList<>();
-        mAdapter = new FeedAdapter(mFeedModels, mImageLoader);
-        mAdapter.setOnDeleteClicked(this);
-        mRecyclerView.setAdapter(mAdapter);
-
+        FeedAdapter adapter = new FeedAdapter(new ArrayList<FeedModel>(), mImageLoader);
+        adapter.setOnDeleteClicked(mViewModel);
+        recyclerView.setAdapter(adapter);
     }
 
-    @Override
-    public void onDeleteClicked(FeedModel feed, int index) {
-        mPresenter.deleteFeed(feed, index);
-    }
 
     @Override
     public void removeItem(int index) {
-        if(index > -1 && mFeedModels.size() > index) {
-            mFeedModels.remove(index);
-            mAdapter.notifyItemRemoved(index);
+        FeedAdapter adapter =
+                (FeedAdapter) mBinding.recyclerView.getAdapter();
+
+        if(index > -1 && adapter.getFeedModels().size() > index) {
+            adapter.getFeedModels().remove(index);
+            adapter.notifyItemRemoved(index);
         }
     }
 
     @Override
     public void moveItem(int oldIndex, int newIndex) {
-        FeedModel item = mFeedModels.remove(oldIndex);
+
+        FeedAdapter adapter =
+                (FeedAdapter) mBinding.recyclerView.getAdapter();
+
+        FeedModel item = adapter.getFeedModels().remove(oldIndex);
         if(item != null) {
-            mFeedModels.add(newIndex, item);
-            mAdapter.notifyItemMoved(oldIndex, newIndex);
+            adapter.getFeedModels().add(newIndex, item);
+            adapter.notifyItemMoved(oldIndex, newIndex);
         }
     }
 
     @Override
     public void updateItem(FeedModel data, int index) {
-        if(index >= 0 && mFeedModels.size() > index){
-            mFeedModels.set(index, data);
-            mAdapter.notifyItemChanged(index);
+
+        FeedAdapter adapter =
+                (FeedAdapter) mBinding.recyclerView.getAdapter();
+
+        if(index >= 0 && adapter.getFeedModels().size() > index){
+            adapter.getFeedModels().set(index, data);
+            adapter.notifyItemChanged(index);
         }
     }
 
     @Override
     public void addItem(FeedModel data, int index) {
+        FeedAdapter adapter =
+                (FeedAdapter) mBinding.recyclerView.getAdapter();
+
         if(index >= 0){
-            mFeedModels.add(index, data);
-            mAdapter.notifyItemInserted(index);
+            adapter.getFeedModels().add(index, data);
+            adapter.notifyItemInserted(index);
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPresenter.unbindView(this);
         mImageLoader.unsubscribe();
     }
 
@@ -135,7 +146,7 @@ public class MainFragment extends BaseFragment implements MainView, FeedAdapter.
     @Override
     protected void setUpComponent() {
         AppComponent appComponent = SquarApp.get(getActivity()).getAppComponent();
-        MainScreenComponent component = appComponent.plus(new MainScreenModule());
+        MainScreenComponent component = appComponent.plus(new MainScreenModule(this));
         component.inject(this);
     }
 
@@ -149,11 +160,15 @@ public class MainFragment extends BaseFragment implements MainView, FeedAdapter.
 
     @Module
     public static class MainScreenModule {
-        // provide fragment needed object here
+        MainViewModel.DataListener mDataListener;
+
+        public MainScreenModule(MainViewModel.DataListener dataListener) {
+            this.mDataListener = dataListener;
+        }
 
         @Provides
-        public MainPresenter provideMainPresenter(FeedChangedUseCase feedChangedUseCase, FeedModelMapper mapper, DeleteFeedUseCaseFactory deleteFeedUseCaseFactory){
-            return new MainPresenter(feedChangedUseCase, mapper, deleteFeedUseCaseFactory, new ArrayList<String>());
+        public MainViewModel provideMainPresenter(FeedChangedUseCase feedChangedUseCase, FeedModelMapper mapper, DeleteFeedUseCaseFactory deleteFeedUseCaseFactory){
+            return new MainViewModel(mDataListener, new ArrayList<String>(), deleteFeedUseCaseFactory, feedChangedUseCase, mapper);
         }
     }
 }

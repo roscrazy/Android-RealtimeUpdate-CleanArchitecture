@@ -9,13 +9,13 @@ import com.mike.feed.util.CompositeUseCases;
  * Base ViewModel implementation.
  *
  */
-public class BaseViewModel implements ViewModel {
+public class SubscriptionViewModel implements ViewModel {
 
     @NonNull
     private final CompositeUseCases useCasesToUnsubscribeOnUnbindView = new CompositeUseCases();
 
 
-    @Override
+
     public final void unsubscribeOnUnbindView(@NonNull UseCase subscription, @NonNull UseCase... subscriptions) {
         useCasesToUnsubscribeOnUnbindView.add(subscription);
 
