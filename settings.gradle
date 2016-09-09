@@ -1,2 +1,2 @@
-include ':app', ':domain', ':data', ':utility', ':mvvm'
+include ':mvp', ':domain', ':data', ':utility', ':mvvm'
 include ':buildsystem'

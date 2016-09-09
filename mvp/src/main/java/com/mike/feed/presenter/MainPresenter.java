@@ -44,7 +44,7 @@ public class MainPresenter extends BasePresenter<MainView> {
 
 
 
-    @Inject
+
     public MainPresenter(FeedChangedUseCase feedChangedUseCase, FeedModelMapper mapper, DeleteFeedUseCaseFactory deleteFeedUseCaseFactory, List<String> keyStore) {
         this.mFeedChangedUseCase = feedChangedUseCase;
         this.mMapper = mapper;
