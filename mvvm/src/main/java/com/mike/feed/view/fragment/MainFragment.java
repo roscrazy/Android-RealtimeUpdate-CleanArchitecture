@@ -15,6 +15,7 @@ import com.mike.feed.SquarApp;
 import com.mike.feed.databinding.FragmentMainBinding;
 import com.mike.feed.dependency.injection.AppComponent;
 import com.mike.feed.dependency.injection.scope.FragmentScope;
+import com.mike.feed.domain.Feed;
 import com.mike.feed.domain.interactor.DeleteFeedUseCaseFactory;
 import com.mike.feed.domain.interactor.FeedChangedUseCase;
 import com.mike.feed.mapper.FeedModelMapper;
@@ -37,7 +38,7 @@ import dagger.Subcomponent;
  */
 public class MainFragment extends BaseFragment implements MainViewModel.DataListener {
 
-    public static MainFragment createInstance(){
+    public static MainFragment createInstance() {
         return new MainFragment();
     }
 
@@ -49,7 +50,6 @@ public class MainFragment extends BaseFragment implements MainViewModel.DataList
     MainViewModel mViewModel;
 
     private FragmentMainBinding mBinding;
-
 
 
     @Nullable
@@ -66,19 +66,19 @@ public class MainFragment extends BaseFragment implements MainViewModel.DataList
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        setUpRecyclerView(mBinding.recyclerView);
         mBinding.setViewModel(mViewModel);
         mViewModel.init();
+        setUpRecyclerView(mBinding.recyclerView);
     }
 
-    private void setUpRecyclerView(RecyclerView recyclerView){
+    private void setUpRecyclerView(RecyclerView recyclerView) {
         // Set up Layout Manager, reverse layout
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.setReverseLayout(true);
         layoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        FeedAdapter adapter = new FeedAdapter(new ArrayList<FeedModel>(), mImageLoader);
+        FeedAdapter adapter = new FeedAdapter(mViewModel.getFeeds(), mImageLoader);
         adapter.setOnDeleteClicked(mViewModel);
         recyclerView.setAdapter(adapter);
     }
@@ -88,47 +88,28 @@ public class MainFragment extends BaseFragment implements MainViewModel.DataList
     public void removeItem(int index) {
         FeedAdapter adapter =
                 (FeedAdapter) mBinding.recyclerView.getAdapter();
-
-        if(index > -1 && adapter.getFeedModels().size() > index) {
-            adapter.getFeedModels().remove(index);
-            adapter.notifyItemRemoved(index);
-        }
+        adapter.notifyItemRemoved(index);
     }
 
     @Override
     public void moveItem(int oldIndex, int newIndex) {
-
         FeedAdapter adapter =
                 (FeedAdapter) mBinding.recyclerView.getAdapter();
-
-        FeedModel item = adapter.getFeedModels().remove(oldIndex);
-        if(item != null) {
-            adapter.getFeedModels().add(newIndex, item);
-            adapter.notifyItemMoved(oldIndex, newIndex);
-        }
+        adapter.notifyItemMoved(oldIndex, newIndex);
     }
 
     @Override
     public void updateItem(FeedModel data, int index) {
-
         FeedAdapter adapter =
                 (FeedAdapter) mBinding.recyclerView.getAdapter();
-
-        if(index >= 0 && adapter.getFeedModels().size() > index){
-            adapter.getFeedModels().set(index, data);
-            adapter.notifyItemChanged(index);
-        }
+        adapter.notifyItemChanged(index);
     }
 
     @Override
     public void addItem(FeedModel data, int index) {
         FeedAdapter adapter =
                 (FeedAdapter) mBinding.recyclerView.getAdapter();
-
-        if(index >= 0){
-            adapter.getFeedModels().add(index, data);
-            adapter.notifyItemInserted(index);
-        }
+        adapter.notifyItemInserted(index);
     }
 
     @Override
@@ -167,8 +148,8 @@ public class MainFragment extends BaseFragment implements MainViewModel.DataList
         }
 
         @Provides
-        public MainViewModel provideMainPresenter(FeedChangedUseCase feedChangedUseCase, FeedModelMapper mapper, DeleteFeedUseCaseFactory deleteFeedUseCaseFactory){
-            return new MainViewModel(mDataListener, new ArrayList<String>(), deleteFeedUseCaseFactory, feedChangedUseCase, mapper);
+        public MainViewModel provideMainPresenter(FeedChangedUseCase feedChangedUseCase, FeedModelMapper mapper, DeleteFeedUseCaseFactory deleteFeedUseCaseFactory) {
+            return new MainViewModel(mDataListener, new ArrayList<String>(), deleteFeedUseCaseFactory, feedChangedUseCase, mapper, new ArrayList<FeedModel>());
         }
     }
 }

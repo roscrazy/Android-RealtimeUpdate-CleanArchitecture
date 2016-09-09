@@ -43,6 +43,7 @@ public class FeedItemViewModel extends BaseObservable implements ViewModel {
 
     public void setFeedModel(FeedModel feedModel){
         this.mFeedModel = feedModel;
+        notifyChange();
     }
 
     @Override

@@ -61,6 +61,11 @@ public class MainViewModel extends SubscriptionViewModel implements ViewModel, F
     @NonNull
     private List<String> mKeyStore;
 
+    @NonNull
+    private List<FeedModel> mFeeds;
+
+
+
 
     @NonNull
     private DataListener mDataListener;
@@ -69,7 +74,7 @@ public class MainViewModel extends SubscriptionViewModel implements ViewModel, F
     public MainViewModel(@NonNull DataListener dataListener,  @NonNull List<String> keyStore
             , @NonNull DeleteFeedUseCaseFactory deleteFeedUseCaseFactory
             , @NonNull FeedChangedUseCase feedChangedUseCase
-            , @NonNull FeedModelMapper mapper) {
+            , @NonNull FeedModelMapper mapper, List<FeedModel> model) {
 
         this.mDataListener = dataListener;
         this.mKeyStore = keyStore;
@@ -77,6 +82,7 @@ public class MainViewModel extends SubscriptionViewModel implements ViewModel, F
         this.mMapper = mapper;
         this.mFeedChangedUseCase = feedChangedUseCase;
         mRecyclerViewVisibility = new ObservableInt(View.INVISIBLE);
+        this.mFeeds = model;
     }
 
     public void init(){
@@ -88,10 +94,9 @@ public class MainViewModel extends SubscriptionViewModel implements ViewModel, F
 
     @Override
     public void onDeleteClicked(FeedModel feed, int index) {
-        String key = mKeyStore.remove(index);
-
+        String key = mKeyStore.get(index);
         DeleteFeedUseCase deleteFeedUseCase = mDeleteFeedUseCaseFactory.create(key);
-        deleteFeedUseCase.execute(new DeleteFeedSubscriber());
+        deleteFeedUseCase.execute(new DeleteFeedSubscriber(index));
         unsubscribeOnUnbindView(deleteFeedUseCase);
     }
 
@@ -115,6 +120,7 @@ public class MainViewModel extends SubscriptionViewModel implements ViewModel, F
                     index = getIndexForKey(feedChangedInfo.getPreviousChildKey()) + 1;
                 }
                 mDataListener.addItem(feedChangedInfo.getFeed(), index);
+                mFeeds.add(index, feedChangedInfo.getFeed());
                 mKeyStore.add(index, feedChangedInfo.getKey());
                 break;
             }
@@ -125,6 +131,7 @@ public class MainViewModel extends SubscriptionViewModel implements ViewModel, F
                     index = getIndexForKey(feedChangedInfo.getKey());
                 }
                 mKeyStore.remove(index);
+                mFeeds.remove(index);
                 mDataListener.removeItem(index);
                 break;
             }
@@ -136,12 +143,15 @@ public class MainViewModel extends SubscriptionViewModel implements ViewModel, F
 
                 mKeyStore.remove(oldIndex);
                 mKeyStore.add(newIndex, feedChangedInfo.getKey());
-
+                mFeeds.remove(oldIndex);
+                mFeeds.add(newIndex, feedChangedInfo.getFeed());
                 mDataListener.moveItem(oldIndex, newIndex);
                 break;
             }
             case Changed:
                 int index = getIndexForKey(feedChangedInfo.getKey());
+                mFeeds.remove(index);
+                mFeeds.add(index, feedChangedInfo.getFeed());
                 mDataListener.updateItem(feedChangedInfo.getFeed(), index);
                 break;
         }
@@ -149,11 +159,15 @@ public class MainViewModel extends SubscriptionViewModel implements ViewModel, F
 
     }
 
+    @NonNull
+    public List<FeedModel> getFeeds() {
+        return mFeeds;
+    }
 
     public int getIndexForKey(String key) {
         int index = mKeyStore.indexOf(key);
         if(index == -1)
-            throw new IllegalArgumentException("Key not found");
+            throw new IllegalArgumentException("Key not found " + key);
         return index;
     }
 
@@ -162,6 +176,11 @@ public class MainViewModel extends SubscriptionViewModel implements ViewModel, F
 
     @RxLogSubscriber
     protected final class DeleteFeedSubscriber extends DefaultSubscriber<Deleted> {
+        private int mIndex;
+
+        public DeleteFeedSubscriber(int index){
+            this.mIndex = index;
+        }
 
         @Override
         public void onCompleted() {
@@ -170,11 +189,14 @@ public class MainViewModel extends SubscriptionViewModel implements ViewModel, F
         @Override
         public void onError(Throwable e) {
             super.onError(e);
+            e.printStackTrace();
             handleError(e);
         }
 
         @Override
         public void onNext(Deleted feedChangedInfo) {
+//            mKeyStore.remove(mIndex);
+//            mFeeds.remove(mIndex);
             // do nothing
         }
     }
@@ -190,6 +212,7 @@ public class MainViewModel extends SubscriptionViewModel implements ViewModel, F
         @Override
         public void onError(Throwable e) {
             super.onError(e);
+            e.printStackTrace();
             handleError(e);
         }
 
