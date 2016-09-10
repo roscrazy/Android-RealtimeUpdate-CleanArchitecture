@@ -9,6 +9,7 @@ Within this project I am using Firebase as the datasource (maybe in real project
 
 What I have done
 -----------------
+- In presentation layer, I demonstrate MVP and MVVM.
 - Connect to datasource and listen to the data changed.
 - Download image, cached to files and Memory.
  
