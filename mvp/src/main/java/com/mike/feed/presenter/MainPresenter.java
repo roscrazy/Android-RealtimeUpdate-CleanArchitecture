@@ -42,9 +42,6 @@ public class MainPresenter extends BasePresenter<MainView> {
     private List<String> mKeyStore;
 
 
-
-
-
     public MainPresenter(FeedChangedUseCase feedChangedUseCase, FeedModelMapper mapper, DeleteFeedUseCaseFactory deleteFeedUseCaseFactory, List<String> keyStore) {
         this.mFeedChangedUseCase = feedChangedUseCase;
         this.mMapper = mapper;
@@ -103,7 +100,7 @@ public class MainPresenter extends BasePresenter<MainView> {
 
     }
 
-    public int getIndexForKey(String key) {
+    private int getIndexForKey(String key) {
         int index = mKeyStore.indexOf(key);
         if(index == -1)
             throw new IllegalArgumentException("Key not found");
@@ -111,6 +108,9 @@ public class MainPresenter extends BasePresenter<MainView> {
     }
 
     public void deleteFeed(FeedModel feedModel, int index){
+        if(index >= mKeyStore.size() || index < 0)
+            throw new IllegalArgumentException(String.format("index = %d out of the bound", index));
+
         String key = mKeyStore.get(index);
 
         DeleteFeedUseCase deleteFeedUseCase = mDeleteFeedUseCaseFactory.create(key);

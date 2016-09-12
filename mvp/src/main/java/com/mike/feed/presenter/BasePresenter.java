@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 
 import com.mike.feed.domain.interactor.UseCase;
 import com.mike.feed.util.CompositeUseCases;
+import com.mike.feed.util.CompositeUseCasesImpl;
 
 /**
  * Base presenter implementation.
@@ -15,11 +16,19 @@ import com.mike.feed.util.CompositeUseCases;
 public class BasePresenter<V> implements Presenter<V> {
 
     @NonNull
-    private final CompositeUseCases useCasesToUnsubscribeOnUnbindView = new CompositeUseCases();
+    protected final CompositeUseCases useCasesToUnsubscribeOnUnbindView;
 
     @Nullable
     private volatile V view;
 
+
+    public BasePresenter() {
+        this(new CompositeUseCasesImpl());
+    }
+
+    BasePresenter(CompositeUseCases compositeUseCases) {
+        this.useCasesToUnsubscribeOnUnbindView = compositeUseCases;
+    }
 
     @Override
     @CallSuper
@@ -55,6 +64,8 @@ public class BasePresenter<V> implements Presenter<V> {
             return useCasesToUnsubscribeOnUnbindView.hasSubscriptions();
         return false;
     }
+
+
 
     @Override
     @CallSuper

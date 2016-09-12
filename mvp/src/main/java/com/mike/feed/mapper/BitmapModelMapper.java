@@ -19,4 +19,6 @@ public class BitmapModelMapper {
         bitmapModel.setBitmap(bitmapItem.getBitmap());
         return bitmapModel;
     }
+
+
 }
