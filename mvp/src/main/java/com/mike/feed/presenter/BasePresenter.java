@@ -16,7 +16,7 @@ import com.mike.feed.util.CompositeUseCasesImpl;
 public class BasePresenter<V> implements Presenter<V> {
 
     @NonNull
-    protected final CompositeUseCases useCasesToUnsubscribeOnUnbindView;
+    protected CompositeUseCases useCasesToUnsubscribeOnUnbindView;
 
     @Nullable
     private volatile V view;
@@ -57,6 +57,11 @@ public class BasePresenter<V> implements Presenter<V> {
             useCasesToUnsubscribeOnUnbindView.add(s);
         }
 
+    }
+
+    public void removeUnsubscribe(UseCase useCase){
+        if(useCase != null)
+            useCasesToUnsubscribeOnUnbindView.remove(useCase);
     }
 
     public boolean haveSubscription(){

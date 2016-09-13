@@ -10,11 +10,13 @@ import com.mike.feed.domain.interactor.DefaultSubscriber;
 import com.mike.feed.domain.interactor.DeleteFeedUseCase;
 import com.mike.feed.domain.interactor.DeleteFeedUseCaseFactory;
 import com.mike.feed.domain.interactor.FeedChangedUseCase;
+import com.mike.feed.domain.interactor.UseCase;
 import com.mike.feed.mapper.FeedModelMapper;
 import com.mike.feed.model.FeedChangedInfoModel;
 import com.mike.feed.model.FeedModel;
 import com.mike.feed.view.MainView;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -114,22 +116,30 @@ public class MainPresenter extends BasePresenter<MainView> {
         String key = mKeyStore.get(index);
 
         DeleteFeedUseCase deleteFeedUseCase = mDeleteFeedUseCaseFactory.create(key);
-        deleteFeedUseCase.execute(new DeleteFeedSubscriber());
+        deleteFeedUseCase.execute(new DeleteFeedSubscriber(deleteFeedUseCase));
         unsubscribeOnUnbindView(deleteFeedUseCase);
     }
 
 
-    @RxLogSubscriber
+
     protected final class DeleteFeedSubscriber extends DefaultSubscriber<Deleted> {
+
+        WeakReference<UseCase> mUseCase;
+
+        public DeleteFeedSubscriber(UseCase useCase) {
+            this.mUseCase = new WeakReference<UseCase>(useCase);
+        }
 
         @Override
         public void onCompleted() {
+            removeUnsubscribe(mUseCase.get());
         }
 
         @Override
         public void onError(Throwable e) {
             super.onError(e);
             handleError(e);
+            removeUnsubscribe(mUseCase.get());
         }
 
         @Override
@@ -139,7 +149,7 @@ public class MainPresenter extends BasePresenter<MainView> {
     }
 
 
-    @RxLogSubscriber
+
     protected final class FeedChangedSubscriber extends DefaultSubscriber<FeedChangedInfo> {
 
         @Override

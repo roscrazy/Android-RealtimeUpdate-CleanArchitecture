@@ -1,11 +1,13 @@
 package com.mike.feed.presenter;
 
+import com.mike.feed.domain.Deleted;
 import com.mike.feed.domain.interactor.DeleteFeedUseCase;
 import com.mike.feed.domain.interactor.DeleteFeedUseCaseFactory;
 import com.mike.feed.domain.interactor.FeedChangedUseCase;
 import com.mike.feed.mapper.FeedModelMapper;
 import com.mike.feed.model.FeedChangedInfoModel;
 import com.mike.feed.model.FeedModel;
+import com.mike.feed.util.CompositeUseCases;
 import com.mike.feed.view.MainView;
 
 import org.junit.Before;
@@ -17,6 +19,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
+import rx.Observable;
 import rx.Subscriber;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -58,7 +61,7 @@ public class MainPresenterTest {
     public void setUp(){
         MockitoAnnotations.initMocks(this);
         mainPresenter = new MainPresenter(feedChangedUseCase, mapper, deleteFeedUseCaseFactory, keyStore);
-
+        mainPresenter.useCasesToUnsubscribeOnUnbindView = Mockito.mock(CompositeUseCases.class);
         mainPresenter.bindView(view);
     }
 
@@ -175,11 +178,9 @@ public class MainPresenterTest {
         Mockito.when(deleteFeedUseCaseFactory.create(FAKE_KEY)).thenReturn(deleteFeedUseCase);
         Mockito.when(keyStore.get(1)).thenReturn(FAKE_KEY);
         Mockito.when(keyStore.size()).thenReturn(10);
-        
+
         mainPresenter.deleteFeed(feedModel, 1);
         Mockito.verify(deleteFeedUseCase).execute(Matchers.any(MainPresenter.DeleteFeedSubscriber.class));
-        assertThat(mainPresenter.haveSubscription(), is(true));
-
     }
 
 
@@ -195,6 +196,22 @@ public class MainPresenterTest {
     }
 
 
+    @Test
+    public void deleteFeedSubscriberShouldRemoveUnsubribe(){
+
+        Observable observable = Observable.just(new Deleted());
+
+        observable.subscribe(mainPresenter.new DeleteFeedSubscriber(deleteFeedUseCase));
+        Mockito.verify(mainPresenter.useCasesToUnsubscribeOnUnbindView).remove(deleteFeedUseCase);
+
+
+        Mockito.reset(mainPresenter.useCasesToUnsubscribeOnUnbindView);
+
+        observable = Observable.error(new RuntimeException());
+        observable.subscribe(mainPresenter.new DeleteFeedSubscriber(deleteFeedUseCase));
+        Mockito.verify(mainPresenter.useCasesToUnsubscribeOnUnbindView).remove(deleteFeedUseCase);
+
+    }
 
 
     private FeedChangedInfoModel createDummyFeedChangedInfoModel(FeedChangedInfoModel.EventType type){

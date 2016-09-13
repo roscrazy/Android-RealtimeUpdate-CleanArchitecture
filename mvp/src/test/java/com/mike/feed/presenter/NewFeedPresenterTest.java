@@ -8,6 +8,7 @@ import com.mike.feed.domain.interactor.NewFeedUseCase;
 import com.mike.feed.domain.interactor.NewFeedUseCaseFactory;
 import com.mike.feed.domain.repository.FeedRepository;
 import com.mike.feed.mapper.FeedModelMapper;
+import com.mike.feed.util.CompositeUseCases;
 import com.mike.feed.view.NewFeedView;
 
 
@@ -45,6 +46,7 @@ public class NewFeedPresenterTest {
     public void setUp(){
         MockitoAnnotations.initMocks(this);
         mPresenter = new NewFeedPresenter(mNewFeedUseCaseFactory, mMapper);
+        mPresenter.useCasesToUnsubscribeOnUnbindView = Mockito.mock(CompositeUseCases.class);
         mPresenter.bindView(mView);
     }
 
@@ -59,14 +61,15 @@ public class NewFeedPresenterTest {
             }
         });
 
-        observable.subscribe(mPresenter.new NewFeedSubscriber());
+        observable.subscribe(mPresenter.new NewFeedSubscriber(mUseCase));
         Mockito.verify(mView).close();
+        Mockito.verify(mPresenter.useCasesToUnsubscribeOnUnbindView).remove(mUseCase);
         Mockito.verifyNoMoreInteractions(mView);
 
     }
 
     @Test
-    public void newFeedScreenShouldShowErrorIfAddNewSuccessful(){
+    public void newFeedScreenShouldShowErrorIfAddNewHasError(){
         Observable observable = Observable.create(new Observable.OnSubscribe<Written>() {
             @Override
             public void call(Subscriber<? super Written> subscriber) {
@@ -74,8 +77,9 @@ public class NewFeedPresenterTest {
             }
         });
 
-        observable.subscribe(mPresenter.new NewFeedSubscriber());
+        observable.subscribe(mPresenter.new NewFeedSubscriber(mUseCase));
         Mockito.verify(mView).showErrorMsg();
+        Mockito.verify(mPresenter.useCasesToUnsubscribeOnUnbindView).remove(mUseCase);
         Mockito.verifyNoMoreInteractions(mView);
     }
 

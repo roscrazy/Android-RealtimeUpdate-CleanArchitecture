@@ -20,7 +20,7 @@ public interface CompositeUseCases {
 
     public void add(final UseCase s);
 
-    public void remove(final Subscription s);
+    public void remove(final UseCase s);
 
     public boolean contain(UseCase useCase);
 

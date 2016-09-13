@@ -46,7 +46,7 @@ public class CompositeUseCasesImpl implements CompositeUseCases{
     }
 
     @Override
-    public void remove(final Subscription s) {
+    public void remove(final UseCase s) {
         if (!unsubscribed) {
             boolean unsubscribe = false;
             synchronized (this) {
