@@ -11,7 +11,7 @@ import com.mike.feed.domain.executor.PostExecutionThread;
 import com.mike.feed.domain.executor.ThreadExecutor;
 import com.mike.feed.domain.repository.BitmapRepository;
 import com.mike.feed.domain.repository.FeedRepository;
-import com.mike.feed.SquarApp;
+import com.mike.feed.FeedApp;
 import com.mike.feed.UIThread;
 
 import javax.inject.Singleton;
@@ -24,10 +24,10 @@ import dagger.Provides;
 @Module
 public class AppModule {
 
-    SquarApp mApp;
+    FeedApp mApp;
 
 
-    public AppModule(SquarApp application){
+    public AppModule(FeedApp application){
         this.mApp = application;
     }
 

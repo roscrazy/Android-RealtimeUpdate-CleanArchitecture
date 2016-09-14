@@ -45,6 +45,7 @@ public class ImageLoader {
         this.mUseCases = new ArrayList<>();
         this.mMapper = mapper;
         this.mBitmapUseCaseFactory = bitmapUseCaseFactory;
+
     }
 
     public void displayImage(final ImageView imageView, final String url, int reqWidth, int reqHeight){

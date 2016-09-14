@@ -10,10 +10,10 @@ import com.mike.feed.dependency.injection.DaggerAppComponent;
 /**
  * Created by MinhNguyen on 8/23/16.
  */
-public class SquarApp extends Application{
+public class FeedApp extends Application{
 
-    public static SquarApp get(Context context){
-        return (SquarApp) context.getApplicationContext();
+    public static FeedApp get(Context context){
+        return (FeedApp) context.getApplicationContext();
     }
 
 

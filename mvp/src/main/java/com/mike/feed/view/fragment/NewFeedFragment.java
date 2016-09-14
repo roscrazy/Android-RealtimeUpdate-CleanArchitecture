@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mike.feed.R;
-import com.mike.feed.SquarApp;
+import com.mike.feed.FeedApp;
 import com.mike.feed.dependency.injection.AppComponent;
 import com.mike.feed.dependency.injection.scope.FragmentScope;
 import com.mike.feed.presenter.NewFeedPresenter;
@@ -101,7 +101,7 @@ public class NewFeedFragment extends BaseFragment implements NewFeedView{
 
     @Override
     protected void setUpComponent() {
-        AppComponent appComponent = SquarApp.get(getActivity()).getAppComponent();
+        AppComponent appComponent = FeedApp.get(getActivity()).getAppComponent();
         NewFeedComponent component = appComponent.plus(new NewFeedModule());
         component.inject(this);
     }
