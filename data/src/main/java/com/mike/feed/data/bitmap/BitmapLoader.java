@@ -6,6 +6,7 @@ import com.mike.feed.data.cache.FileCache;
 import com.mike.utility.BitmapUtil;
 
 import java.io.File;
+import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -28,21 +29,21 @@ public class BitmapLoader {
 
 
     public Observable<Bitmap> loadBitmap(final String url, final int reqWidth, final int reqHeight) {
-        return Observable.create(new Observable.OnSubscribe<Bitmap>() {
+
+        return Observable.fromCallable(new Callable<Bitmap>() {
             @Override
-            public void call(Subscriber<? super Bitmap> subscriber) {
+            public Bitmap call() throws Exception {
                 if (mFileCache.hasFile(url)) {
+
                     File image = mFileCache.getFile(url);
-
                     Bitmap bitmap = BitmapUtil.loadBitMapFromFile(image, reqWidth, reqHeight);
-                    subscriber.onNext(bitmap);
-                    subscriber.onCompleted();
 
-                } else {
-                    throw new RuntimeException("File does not exist in cache");
-                }
+                    return bitmap;
+                };
+                return null;
             }
         });
+
     }
 
 }
