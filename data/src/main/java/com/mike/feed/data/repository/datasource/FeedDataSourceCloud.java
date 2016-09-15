@@ -21,11 +21,6 @@ public class FeedDataSourceCloud implements FeedDataSource {
 
 
     @Override
-    public Observable<FeedEntity> feedEntityByIndex(int index) {
-        return fireBase.feedEntityByIndex(index);
-    }
-
-    @Override
     public Observable<FeedChangedInfoEntity> registerFeedChangedEvent() {
         return fireBase.registerFeedChangedEvent();
     }

@@ -29,15 +29,15 @@ import javax.inject.Inject;
 @FragmentScope
 public class ImageLoader {
 
-    private static final int DEFAULT_IMAGE_ID = R.drawable.ic_loading;
-    private static final int DEFAULT_IMAGE_ERROR = R.drawable.ic_error;
+    public static final int DEFAULT_IMAGE_ID = R.drawable.ic_loading;
+    public static final int DEFAULT_IMAGE_ERROR = R.drawable.ic_error;
 
-    private MemoryCache mMemoryCache;
-    private Map<ImageView, String> mImageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
+    private final MemoryCache mMemoryCache;
+    private final Map<ImageView, String> mImageViews;
 
-    private BitmapModelMapper mMapper;
-    private List<UseCase> mUseCases;
-    private BitmapUseCaseFactory mBitmapUseCaseFactory;
+    private final BitmapModelMapper mMapper;
+    private final List<UseCase> mUseCases;
+    private final BitmapUseCaseFactory mBitmapUseCaseFactory;
 
     @Inject
     public ImageLoader(MemoryCache mMemoryCache, BitmapUseCaseFactory bitmapUseCaseFactory, BitmapModelMapper mapper) {
@@ -45,7 +45,21 @@ public class ImageLoader {
         this.mUseCases = new ArrayList<>();
         this.mMapper = mapper;
         this.mBitmapUseCaseFactory = bitmapUseCaseFactory;
+        this.mImageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
+    }
 
+
+    ImageLoader(MemoryCache mMemoryCache
+            , BitmapUseCaseFactory bitmapUseCaseFactory
+            , BitmapModelMapper mapper
+            , Map<ImageView, String> imageViews
+            ,List<UseCase> useCaseList) {
+
+        this.mMemoryCache = mMemoryCache;
+        this.mMapper = mapper;
+        this.mBitmapUseCaseFactory = bitmapUseCaseFactory;
+        this.mImageViews = imageViews;
+        this.mUseCases = useCaseList;
     }
 
     public void displayImage(final ImageView imageView, final String url, int reqWidth, int reqHeight){
@@ -79,7 +93,7 @@ public class ImageLoader {
     }
 
 
-    @RxLogSubscriber
+
     protected final class BitmapSubscriber extends DefaultSubscriber<BitmapItem> {
         // Avoid memory leak
         private WeakReference<ImageView> mImageView;

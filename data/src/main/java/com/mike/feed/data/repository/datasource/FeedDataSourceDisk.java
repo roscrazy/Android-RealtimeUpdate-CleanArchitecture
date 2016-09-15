@@ -21,11 +21,6 @@ public class FeedDataSourceDisk implements FeedDataSource{
     }
 
     @Override
-    public Observable<FeedEntity> feedEntityByIndex(int index) {
-        return feedCache.userEntityByIndex(index);
-    }
-
-    @Override
     public Observable<FeedChangedInfoEntity> registerFeedChangedEvent() {
         return feedCache.registerFeedChangedEvent();
     }

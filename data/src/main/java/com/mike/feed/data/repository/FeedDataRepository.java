@@ -37,18 +37,6 @@ public class FeedDataRepository implements FeedRepository {
 
 
     @Override
-    public Observable<Feed> getFeed(int index) {
-        return factory.createCloudDataSource().feedEntityByIndex(index)
-                .map(new Func1<FeedEntity, Feed>() {
-                    @Override
-                    public Feed call(FeedEntity feedEntity) {
-                        return mapper.transform(feedEntity);
-                    }
-                });
-    }
-
-
-    @Override
     public Observable<FeedChangedInfo> registerFeedChangedEvent() {
         return factory.createCloudDataSource().registerFeedChangedEvent().map(new Func1<FeedChangedInfoEntity, FeedChangedInfo>() {
             @Override

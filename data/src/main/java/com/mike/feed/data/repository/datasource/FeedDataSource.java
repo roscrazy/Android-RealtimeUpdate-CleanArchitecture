@@ -12,9 +12,6 @@ import rx.Observable;
  */
 public interface FeedDataSource {
 
-    Observable<FeedEntity> feedEntityByIndex(final int index);
-
-
     Observable<FeedChangedInfoEntity> registerFeedChangedEvent();
 
 

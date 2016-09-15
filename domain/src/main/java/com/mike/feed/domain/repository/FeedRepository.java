@@ -12,8 +12,6 @@ import rx.Observable;
  */
 public interface FeedRepository {
 
-    public Observable<Feed> getFeed(int index);
-
     public Observable<FeedChangedInfo> registerFeedChangedEvent();
 
     public Observable<Written> writeFeed(Feed feed);
