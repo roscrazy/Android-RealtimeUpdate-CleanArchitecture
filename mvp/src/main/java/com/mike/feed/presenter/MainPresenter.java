@@ -21,6 +21,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import timber.log.Timber;
+
 /**
  * Created by MinhNguyen on 8/25/16.
  */
@@ -164,6 +166,7 @@ public class MainPresenter extends BasePresenter<MainView> {
 
         @Override
         public void onNext(FeedChangedInfo feedChangedInfo) {
+            Timber.v(String.format("onNext : %s", Thread.currentThread().getName()));
             FeedChangedInfoModel model = mMapper.transform(feedChangedInfo);
             handleFeedChanged(model);
         }

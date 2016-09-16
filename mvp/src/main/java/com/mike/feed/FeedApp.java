@@ -7,6 +7,8 @@ import com.mike.feed.dependency.injection.AppComponent;
 import com.mike.feed.dependency.injection.AppModule;
 import com.mike.feed.dependency.injection.DaggerAppComponent;
 
+import timber.log.Timber;
+
 /**
  * Created by MinhNguyen on 8/23/16.
  */
@@ -25,6 +27,10 @@ public class FeedApp extends Application{
 
         appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this)).build();
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
     }
 
     public AppComponent getAppComponent() {

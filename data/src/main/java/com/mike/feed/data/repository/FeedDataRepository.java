@@ -17,6 +17,7 @@ import javax.inject.Singleton;
 
 import rx.Observable;
 import rx.functions.Func1;
+import timber.log.Timber;
 
 /**
  * Created by MinhNguyen on 8/24/16.
@@ -38,9 +39,11 @@ public class FeedDataRepository implements FeedRepository {
 
     @Override
     public Observable<FeedChangedInfo> registerFeedChangedEvent() {
+        Timber.v(String.format("registerFeedChangedEvent : %s", Thread.currentThread().getName()));
         return factory.createCloudDataSource().registerFeedChangedEvent().map(new Func1<FeedChangedInfoEntity, FeedChangedInfo>() {
             @Override
             public FeedChangedInfo call(FeedChangedInfoEntity entity) {
+                Timber.v(String.format("mapping : %s", Thread.currentThread().getName()));
                 return mapper.transform(entity);
             }
         });

@@ -14,8 +14,7 @@ import javax.inject.Inject;
 public class MemoryCache {
 
     private static final String TAG = "MemoryCache";
-    private Map<String, Bitmap> cache = Collections.synchronizedMap(
-            new LinkedHashMap<String, Bitmap>(10, 1.5f, true));//Last argument true for LRU ordering
+    private final Map<String, Bitmap> cache;
 
     private long size = 0;//current allocated size
     private long limit = 1000000;//max memory in bytes
@@ -25,6 +24,12 @@ public class MemoryCache {
     public MemoryCache() {
         //use 25% of available heap size
         setLimit(Runtime.getRuntime().maxMemory() / 4);
+        cache = Collections.synchronizedMap(
+                new LinkedHashMap<String, Bitmap>(10, 1.5f, true));//Last argument true for LRU ordering
+    }
+
+    MemoryCache(Map<String, Bitmap> cache){
+        this.cache = cache;
     }
 
     public void setLimit(long new_limit) {

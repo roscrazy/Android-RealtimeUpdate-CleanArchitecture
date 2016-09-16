@@ -15,10 +15,8 @@ What I have done
  
 Concerning
 -----------------
-- Firebase already running in background thread and post data to main thread, but the app still calling Firebase from another background thread.
-I just want to demostrate the real time update from a background thread thought.
+- Haven't covered all by unit test, only in MVP.
 - Could use a better approach to download the image.
-- Haven't covered all by unit test, just a few sample.
 - I am more than welcome to recieve your comment.
 
 

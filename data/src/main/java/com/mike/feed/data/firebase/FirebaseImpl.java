@@ -20,6 +20,7 @@ import rx.Subscriber;
 import rx.functions.Action0;
 import rx.functions.Action1;
 import rx.subscriptions.Subscriptions;
+import timber.log.Timber;
 
 /**
  * Created by MinhNguyen on 8/24/16.
@@ -41,6 +42,10 @@ public class FirebaseImpl implements Firebase {
         return Observable.fromAsync(new Action1<AsyncEmitter<FeedChangedInfoEntity>>() {
             @Override
             public void call(AsyncEmitter<FeedChangedInfoEntity> feedChangedInfoEntityAsyncEmitter) {
+
+                Timber.v(String.format("fromAsync create : %s", Thread.currentThread().getName()));
+
+                // those of registered method will be called in a background thread
                 final Query query = database.child(Firebase.QUERY_FEEDS);
                 final ChildEventListener listener = new FeedChangeListener(feedChangedInfoEntityAsyncEmitter);
 
@@ -119,6 +124,7 @@ public class FirebaseImpl implements Firebase {
     }
 
 
+    // please note that all of the callback method here will be called from main thread
     static class FeedChangeListener implements ChildEventListener {
         AsyncEmitter<FeedChangedInfoEntity> subscriber;
 
@@ -130,9 +136,8 @@ public class FirebaseImpl implements Firebase {
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
             FeedEntity feedEntity = dataSnapshot.getValue(FeedEntity.class);
             feedEntity.setKey(dataSnapshot.getKey());
-            FeedChangedInfoEntity feedChangedInfoEntity = new FeedChangedInfoEntity(EventType.Added, s, dataSnapshot.getKey(), feedEntity);
+            final FeedChangedInfoEntity feedChangedInfoEntity = new FeedChangedInfoEntity(EventType.Added, s, dataSnapshot.getKey(), feedEntity);
             subscriber.onNext(feedChangedInfoEntity);
-
         }
 
         @Override
