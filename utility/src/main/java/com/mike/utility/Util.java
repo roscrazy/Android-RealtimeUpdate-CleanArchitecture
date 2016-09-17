@@ -1,4 +1,4 @@
-package com.mike.feed.data.util;
+package com.mike.utility;
 
 import java.io.IOException;
 import java.io.InputStream;

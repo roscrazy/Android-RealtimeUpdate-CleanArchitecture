@@ -2,17 +2,15 @@ package com.mike.feed.data.bitmap;
 
 import android.graphics.Bitmap;
 
-import com.mike.feed.data.cache.FileCache;
 import com.mike.utility.BitmapUtil;
+import com.mike.utility.cache.DiskCache;
 
-import java.io.File;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import rx.Observable;
-import rx.Subscriber;
 
 /**
  * Created by MinhNguyen on 8/27/16.
@@ -20,11 +18,11 @@ import rx.Subscriber;
 
 @Singleton
 public class BitmapLoader {
-    FileCache mFileCache;
+    DiskCache mDiskCache;
 
     @Inject
-    public BitmapLoader(FileCache mFileCache) {
-        this.mFileCache = mFileCache;
+    public BitmapLoader(DiskCache mDiskCache) {
+        this.mDiskCache = mDiskCache;
     }
 
 
@@ -33,13 +31,11 @@ public class BitmapLoader {
         return Observable.fromCallable(new Callable<Bitmap>() {
             @Override
             public Bitmap call() throws Exception {
-                if (mFileCache.hasFile(url)) {
 
-                    File image = mFileCache.getFile(url);
-                    Bitmap bitmap = BitmapUtil.loadBitMapFromFile(image, reqWidth, reqHeight);
-
-                    return bitmap;
+                if (mDiskCache.contains(url)) {
+                    return mDiskCache.getBitmap(url, reqWidth, reqHeight).getBitmap();
                 };
+
                 return null;
             }
         });

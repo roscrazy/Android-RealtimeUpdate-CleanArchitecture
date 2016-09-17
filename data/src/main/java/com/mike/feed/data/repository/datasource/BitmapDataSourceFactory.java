@@ -1,6 +1,8 @@
 package com.mike.feed.data.repository.datasource;
 
-import com.mike.feed.data.cache.FileCache;
+import com.mike.utility.cache.DiskCache;
+
+import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -10,20 +12,28 @@ import javax.inject.Inject;
 
 public class BitmapDataSourceFactory {
 
-    FileCache mFileCache;
+    DiskCache mDiskCache;
     BitmapDataSourceCloud mDataSourceCloud;
     BitmapDataSourceDisk mDataSourceDisk;
 
 
     @Inject
-    public BitmapDataSourceFactory(FileCache mFileCache, BitmapDataSourceCloud mDataSourceCloud, BitmapDataSourceDisk mDataSourceDisk) {
-        this.mFileCache = mFileCache;
+    public BitmapDataSourceFactory(DiskCache mDiskCache, BitmapDataSourceCloud mDataSourceCloud, BitmapDataSourceDisk mDataSourceDisk) {
+        this.mDiskCache = mDiskCache;
         this.mDataSourceCloud = mDataSourceCloud;
         this.mDataSourceDisk = mDataSourceDisk;
     }
 
     public BitmapDataSource createDataSource(String url){
-        if(mFileCache.hasFile(url)){
+        boolean contain = false;
+        try{
+            contain = mDiskCache.contains(url);
+        }catch (IOException e){
+            // we will ignore cache error, and download the file from cloud
+            e.printStackTrace();
+        }
+
+        if(contain){
             return mDataSourceDisk;
         }else{
             return mDataSourceCloud;

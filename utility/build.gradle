@@ -20,5 +20,13 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
+
+    def dependencies = rootProject.ext.utilityDependencies
+    def testDependencies = rootProject.ext.utilityTestDependencies
+
+    compile dependencies.disklrucache
+
+    testCompile testDependencies.junit
+    testCompile testDependencies.assertj
+    testCompile testDependencies.mockito
 }

@@ -15,6 +15,7 @@ import com.mike.feed.domain.interactor.UseCase;
 import com.mike.feed.domain.repository.BitmapRepository;
 import com.mike.feed.mapper.BitmapModelMapper;
 import com.mike.feed.model.BitmapModel;
+import com.mike.utility.cache.MemoryCache;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

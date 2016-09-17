@@ -11,11 +11,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mike.feed.R;
-import com.mike.feed.SquarApp;
+import com.mike.feed.FeedApp;
 import com.mike.feed.databinding.FragmentMainBinding;
 import com.mike.feed.dependency.injection.AppComponent;
 import com.mike.feed.dependency.injection.scope.FragmentScope;
-import com.mike.feed.domain.Feed;
 import com.mike.feed.domain.interactor.DeleteFeedUseCaseFactory;
 import com.mike.feed.domain.interactor.FeedChangedUseCase;
 import com.mike.feed.mapper.FeedModelMapper;
@@ -126,7 +125,7 @@ public class MainFragment extends BaseFragment implements MainViewModel.DataList
     /*----------------------------------------------- DJ -------------------------------------------------*/
     @Override
     protected void setUpComponent() {
-        AppComponent appComponent = SquarApp.get(getActivity()).getAppComponent();
+        AppComponent appComponent = FeedApp.get(getActivity()).getAppComponent();
         MainScreenComponent component = appComponent.plus(new MainScreenModule(this));
         component.inject(this);
     }

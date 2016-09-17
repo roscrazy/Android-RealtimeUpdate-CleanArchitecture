@@ -16,6 +16,7 @@ import com.mike.feed.R;
 import com.mike.feed.dependency.injection.scope.FragmentScope;
 import com.mike.feed.mapper.BitmapModelMapper;
 import com.mike.feed.model.BitmapModel;
+import com.mike.utility.cache.MemoryCache;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

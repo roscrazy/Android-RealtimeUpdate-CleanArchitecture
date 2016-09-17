@@ -39,6 +39,8 @@ dependencies {
     compile dependencies.firebaseDatabase
     compile dependencies.firebaseCore
 
+
+
     provided dependencies.javaxAnnotation
 
 

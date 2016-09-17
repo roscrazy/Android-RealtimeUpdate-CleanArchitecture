@@ -2,7 +2,7 @@ package com.mike.feed.dependency.injection;
 
 import android.content.Context;
 
-import com.mike.feed.SquarApp;
+import com.mike.feed.FeedApp;
 import com.mike.feed.UIThread;
 import com.mike.feed.data.cache.FeedCache;
 import com.mike.feed.data.cache.FeedCacheImpl;
@@ -13,6 +13,11 @@ import com.mike.feed.domain.executor.PostExecutionThread;
 import com.mike.feed.domain.executor.ThreadExecutor;
 import com.mike.feed.domain.repository.BitmapRepository;
 import com.mike.feed.domain.repository.FeedRepository;
+import com.mike.feed.util.C;
+import com.mike.utility.cache.DiskCache;
+import com.mike.utility.cache.MemoryCache;
+
+import java.io.IOException;
 
 import javax.inject.Singleton;
 
@@ -23,10 +28,10 @@ import dagger.Provides;
 @Module
 public class AppModule {
 
-    SquarApp mApp;
+    FeedApp mApp;
 
 
-    public AppModule(SquarApp application){
+    public AppModule(FeedApp application){
         this.mApp = application;
     }
 
@@ -58,6 +63,23 @@ public class AppModule {
         return bitmapDataRepository;
     }
 
+
+    @Provides
+    @Singleton
+    DiskCache provideFileCache(){
+        try {
+            return DiskCache.open(mApp.getApplicationContext().getCacheDir(), 1, C.DISK_CACHE_MAX_SIZE);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Provides
+    @Singleton
+    MemoryCache provideMemoryCache(){
+        return new MemoryCache();
+    }
 
     @Provides
     @Singleton

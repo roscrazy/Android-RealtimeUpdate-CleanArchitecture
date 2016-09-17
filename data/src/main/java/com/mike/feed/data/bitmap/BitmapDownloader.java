@@ -2,16 +2,14 @@ package com.mike.feed.data.bitmap;
 
 import android.graphics.Bitmap;
 
-import com.mike.feed.data.cache.FileCache;
-import com.mike.feed.data.util.Util;
+
 import com.mike.utility.BitmapUtil;
+import com.mike.utility.cache.DiskCache;
 
 import org.apache.http.conn.ssl.AllowAllHostnameVerifier;
 
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -24,8 +22,7 @@ import javax.inject.Inject;
 import javax.net.ssl.HttpsURLConnection;
 
 import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Func0;
+import rx.exceptions.Exceptions;
 import rx.functions.Func1;
 
 /**
@@ -36,28 +33,34 @@ public class BitmapDownloader {
     private static final int REQUEST_TIME_OUT = 30000;
     private static final String HTTP_GET = "GET";
 
-    FileCache mFileCache;
+    DiskCache mDiskCache;
 
     @Inject
-    public BitmapDownloader(FileCache fileCache) {
-        this.mFileCache = fileCache;
+    public BitmapDownloader(DiskCache diskCache) {
+        this.mDiskCache = diskCache;
+
     }
 
 
-    public Observable<Bitmap> downloadBitmap(String url, final int reqWidth, final int reqHeight) {
-        return this.downloadBitmap(url).map(new Func1<File, Bitmap>() {
+    public Observable<Bitmap> downloadBitmap(final String url, final int reqWidth, final int reqHeight) {
+        return this.downloadBitmap(url).map(new Func1<String, Bitmap>() {
             @Override
-            public Bitmap call(File file) {
-                return BitmapUtil.loadBitMapFromFile(file, reqWidth, reqHeight);
+            public Bitmap call(String key) {
+                try {
+                    return mDiskCache.getBitmap(url, reqWidth, reqHeight).getBitmap();
+                }catch (IOException e){
+                    throw Exceptions.propagate(e);
+                }
+
             }
         });
     }
 
 
-    private Observable<File> downloadBitmap(final String strUrl) {
-        return Observable.fromCallable(new Callable<File>() {
+    private Observable<String> downloadBitmap(final String strUrl) {
+        return Observable.fromCallable(new Callable<String>() {
             @Override
-            public File call() throws Exception {
+            public String call() throws Exception {
                 return download(strUrl);
             }
         });
@@ -71,7 +74,7 @@ public class BitmapDownloader {
      * @param strUrl
      * @return
      */
-    File download(final String strUrl) throws IOException {
+    String download(final String strUrl) throws IOException {
         BufferedOutputStream bufferedOutputStream = null;
         DataInputStream inputStream = null;
         OutputStream connectOutputStream = null;
@@ -97,12 +100,10 @@ public class BitmapDownloader {
                 conn.setReadTimeout(REQUEST_TIME_OUT);
                 conn.connect();
                 inputStream = new DataInputStream(conn.getInputStream());
-                File cacheFile = mFileCache.getFile(strUrl);
-                bufferedOutputStream = new BufferedOutputStream(new FileOutputStream(cacheFile));
 
-                Util.copyStream(inputStream, bufferedOutputStream);
+                mDiskCache.put(strUrl, inputStream);
 
-                return cacheFile;
+                return strUrl;
             } finally {
                 if (connectOutputStream != null) {
                     connectOutputStream.close();

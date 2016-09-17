@@ -13,6 +13,11 @@ import com.mike.feed.domain.repository.BitmapRepository;
 import com.mike.feed.domain.repository.FeedRepository;
 import com.mike.feed.FeedApp;
 import com.mike.feed.UIThread;
+import com.mike.feed.util.C;
+import com.mike.utility.cache.DiskCache;
+import com.mike.utility.cache.MemoryCache;
+
+import java.io.IOException;
 
 import javax.inject.Singleton;
 
@@ -58,6 +63,24 @@ public class AppModule {
     BitmapRepository provideBitmapRepository(BitmapDataRepository bitmapDataRepository){
         return bitmapDataRepository;
     }
+
+    @Provides
+    @Singleton
+    DiskCache provideFileCache(){
+        try {
+            return DiskCache.open(mApp.getApplicationContext().getCacheDir(), 1, C.DISK_CACHE_MAX_SIZE);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Provides
+    @Singleton
+    MemoryCache provideMemoryCache(){
+        return new MemoryCache();
+    }
+
 
 
     @Provides

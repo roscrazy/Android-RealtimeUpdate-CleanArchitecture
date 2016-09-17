@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mike.feed.R;
-import com.mike.feed.SquarApp;
+import com.mike.feed.FeedApp;
 import com.mike.feed.databinding.FragmentNewFeedBinding;
 import com.mike.feed.dependency.injection.AppComponent;
 import com.mike.feed.dependency.injection.scope.FragmentScope;
@@ -91,7 +91,7 @@ public class NewFeedFragment extends BaseFragment implements NewFeedViewModel.Da
 
     @Override
     protected void setUpComponent() {
-        AppComponent appComponent = SquarApp.get(getActivity()).getAppComponent();
+        AppComponent appComponent = FeedApp.get(getActivity()).getAppComponent();
         NewFeedComponent component = appComponent.plus(new NewFeedModule(this));
         component.inject(this);
     }

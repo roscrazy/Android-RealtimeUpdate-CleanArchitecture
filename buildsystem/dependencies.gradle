@@ -18,7 +18,7 @@ ext {
     androidCompileSdkVersion = 24
 
     //Libraries
-    daggerVersion = '2.0.2'
+    daggerVersion = '2.7'
     butterKnifeVersion = '8.1.0'
     recyclerViewVersion = '21.0.3'
     rxJavaVersion = '1.1.9'
@@ -29,6 +29,8 @@ ext {
     timberVersion = '4.1.0'
     glassfishVersion = '10.0-b28'
     firebaseVersion = "9.2.0"
+    disklrucacheVersion = "2.0.2"
+
 
     //Testing
     robolectricVersion = '3.1'
@@ -38,6 +40,17 @@ ext {
     dexmakerVersion = '1.0'
     espressoVersion = '2.2.1'
     runnerVersion = '0.4.1'
+
+
+    utilityDependencies = [
+            disklrucache            : "com.jakewharton:disklrucache:$disklrucacheVersion",
+    ]
+
+    utilityTestDependencies = [
+            junit      : "junit:junit:${jUnitVersion}",
+            assertj    : "org.assertj:assertj-core:${assertJVersion}",
+            mockito    : "org.mockito:mockito-core:${mockitoVersion}",
+    ]
 
 
     dataDependencies = [
@@ -50,6 +63,8 @@ ext {
             timber                : "com.jakewharton.timber:timber:${timberVersion}",
             firebaseDatabase            : "com.google.firebase:firebase-database:$firebaseVersion",
             firebaseCore            : "com.google.firebase:firebase-core:$firebaseVersion",
+            disklrucache            : "com.jakewharton:disklrucache:$disklrucacheVersion",
+
     ]
 
     dataTestDependencies = [
