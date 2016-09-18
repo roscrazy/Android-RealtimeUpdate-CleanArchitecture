@@ -60,6 +60,7 @@ public class NewFeedFragment extends BaseFragment implements NewFeedView{
         return inflater.inflate(R.layout.fragment_new_feed, container, false);
     }
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

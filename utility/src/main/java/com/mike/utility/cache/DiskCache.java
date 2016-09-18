@@ -154,7 +154,8 @@ public class DiskCache {
             os = openStream(key, annotations);
             Util.copyStream(is, os);
         } finally {
-            if (os != null) os.close();
+            if (os != null)
+                os.close();
         }
     }
 
