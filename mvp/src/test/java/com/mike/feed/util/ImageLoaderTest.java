@@ -9,6 +9,7 @@ import com.mike.feed.domain.interactor.BitmapUseCaseFactory;
 import com.mike.feed.domain.interactor.UseCase;
 import com.mike.feed.mapper.BitmapModelMapper;
 import com.mike.feed.model.BitmapModel;
+import com.mike.utility.cache.MemoryCache;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,10 +39,14 @@ public class ImageLoaderTest {
 
     private static final Bitmap DUMMY_BITMAP = Mockito.mock(Bitmap.class);
     private static final String DUMMY_URL = "http://img.f29.vnecdn.net/2016/09/14/cam-photo-front-chettra-9214-1473862876.jpg";
+    private static final BitmapUseCase DUMMY_BITMAP_USECASE = mock(BitmapUseCase.class);
     private static final int REQUIRED_SIZE = 100;
 
     @Mock
     private MemoryCache mMemoryCache;
+
+    @Mock
+    Map<String, ImageLoader.BitmapSubscriber> subscriberMap;
 
     @Mock
     private BitmapUseCaseFactory bitmapUseCaseFactory;
@@ -59,16 +64,34 @@ public class ImageLoaderTest {
     @Mock
     private Map<ImageView, String> imageViews;
 
+
     ImageLoader imageLoader;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        imageLoader = new ImageLoader(mMemoryCache, bitmapUseCaseFactory, mapper, imageViews, useCases);
+        imageLoader = new ImageLoader(mMemoryCache, bitmapUseCaseFactory, mapper, imageViews, useCases, subscriberMap);
     }
 
     @Test
-    public void displayImageShouldNotAddToQueueIfAlreadyExist() throws Exception {
+    public void displayImageShouldNotAddToQueueIfAlreadyExist(){
+        ImageLoader.BitmapSubscriber subscriber = mock(ImageLoader.BitmapSubscriber.class);
+
+        when(subscriberMap.get(DUMMY_URL)).thenReturn(subscriber);
+        when(imageViews.get(imageView)).thenReturn(null);
+        when(mMemoryCache.get(DUMMY_URL)).thenReturn(null);
+
+        imageLoader.displayImage(imageView, DUMMY_URL, REQUIRED_SIZE, REQUIRED_SIZE);
+        verify(imageViews).put(imageView, DUMMY_URL);
+        verify(subscriber).addImageView(imageView);
+
+        verifyNoMoreInteractions(bitmapUseCaseFactory);
+        verifyNoMoreInteractions(mapper);
+        verifyNoMoreInteractions(imageView);
+    }
+
+    @Test
+    public void displayImageShouldNotAddToQueueIfAlreadyExistWithSameUrl() throws Exception {
         when(imageViews.get(imageView)).thenReturn(DUMMY_URL);
 
         imageLoader.displayImage(imageView, DUMMY_URL, REQUIRED_SIZE, REQUIRED_SIZE);
@@ -161,10 +184,10 @@ public class ImageLoaderTest {
 
         Observable<BitmapItem> observable = Observable.just(bitmapItem);
 
-        observable.subscribe(imageLoader.new BitmapSubscriber(imageView, DUMMY_URL));
+        observable.subscribe(imageLoader.new BitmapSubscriber(imageView, DUMMY_URL, DUMMY_BITMAP_USECASE));
 
         verify(imageView).setImageBitmap(DUMMY_BITMAP);
-
+        verify(useCases).remove(DUMMY_BITMAP_USECASE);
         verify(mMemoryCache).put(DUMMY_URL, DUMMY_BITMAP);
 
     }
@@ -180,10 +203,13 @@ public class ImageLoaderTest {
 
         Observable<BitmapItem> observable = Observable.just(bitmapItem);
 
-        observable.subscribe(imageLoader.new BitmapSubscriber(imageView, DUMMY_URL));
+        observable.subscribe(imageLoader.new BitmapSubscriber(imageView, DUMMY_URL, DUMMY_BITMAP_USECASE));
+
+        verify(mMemoryCache).put(DUMMY_URL, DUMMY_BITMAP);
+        verify(useCases).remove(DUMMY_BITMAP_USECASE);
 
         verify(imageView, never()).setImageBitmap(DUMMY_BITMAP);
-        verify(mMemoryCache, never()).put(DUMMY_URL, DUMMY_BITMAP);
+
     }
 
     @Test
@@ -197,12 +223,13 @@ public class ImageLoaderTest {
 
         Observable<BitmapItem> observable = Observable.error(new RuntimeException("dummy exception"));
 
-        observable.subscribe(imageLoader.new BitmapSubscriber(imageView, DUMMY_URL));
+        observable.subscribe(imageLoader.new BitmapSubscriber(imageView, DUMMY_URL, DUMMY_BITMAP_USECASE));
 
         verify(imageView).setImageResource(ImageLoader.DEFAULT_IMAGE_ERROR);
 
         verify(mMemoryCache, never()).put(DUMMY_URL, DUMMY_BITMAP);
         verify(imageView, never()).setImageBitmap(DUMMY_BITMAP);
+        verify(useCases).remove(DUMMY_BITMAP_USECASE);
 
     }
 }

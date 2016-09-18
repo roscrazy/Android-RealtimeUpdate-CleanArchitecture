@@ -16,7 +16,6 @@ import com.mike.utility.cache.MemoryCache;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,9 +32,9 @@ public class ImageLoader {
     private final MemoryCache mMemoryCache;
     private final Map<ImageView, String> mImageViews;
     private final Map<String, BitmapSubscriber> mSubscribers;
+    private final List<UseCase> mUseCases;
 
     private final BitmapModelMapper mMapper;
-    private final List<UseCase> mUseCases;
     private final BitmapUseCaseFactory mBitmapUseCaseFactory;
 
     @Inject
@@ -44,8 +43,8 @@ public class ImageLoader {
         this.mUseCases = new ArrayList<>();
         this.mMapper = mapper;
         this.mBitmapUseCaseFactory = bitmapUseCaseFactory;
-        this.mImageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
-        this.mSubscribers = Collections.synchronizedMap(new HashMap<String, BitmapSubscriber>());
+        this.mImageViews = new WeakHashMap<ImageView, String>();
+        this.mSubscribers = new HashMap<String, BitmapSubscriber>();
 
     }
 
@@ -93,7 +92,6 @@ public class ImageLoader {
 
         }
 
-
     }
 
 
@@ -104,7 +102,7 @@ public class ImageLoader {
     }
 
 
-    protected final class BitmapSubscriber extends DefaultSubscriber<BitmapItem> {
+    protected class BitmapSubscriber extends DefaultSubscriber<BitmapItem> {
         // Avoid memory leak
         private List<WeakReference<ImageView>> mWeakImageViews = new ArrayList<>();
         private WeakReference<UseCase> useCase;
@@ -136,6 +134,7 @@ public class ImageLoader {
                     imageView.setImageResource(DEFAULT_IMAGE_ERROR);
                 }
             }
+            mUseCases.remove(useCase.get());
 
         }
 
